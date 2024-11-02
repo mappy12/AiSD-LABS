@@ -82,14 +82,24 @@ public:
             cout << "\n\n";
         }
     }
+
+    T operator()(size_t h, size_t w) {
+        for (size_t i = 0; i < height; ++i) {
+            for (size_t j = 0; j < width; ++i) {
+                return data[h][w];
+            }
+        }
+    }
 };
 
 int main() {
 
     srand(time(0));
 
-    HalfToneImage<unsigned char> image(3, 4, true);
+    HalfToneImage<float> image(3, 4, true);
     image.print();
+
+    cout << image(0,0);
 
     return 0;
 
