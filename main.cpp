@@ -90,6 +90,16 @@ public:
             }
         }
     }
+
+    HalfToneImage& operator*(T value) {
+        for (size_t i = 0; i < height; ++i) {
+            for (size_t j = 0; j < width; ++j) {
+                data[i][j] *= value;
+            }
+        }
+
+        return *this;
+    }
 };
 
 int main() {
@@ -99,7 +109,11 @@ int main() {
     HalfToneImage<float> image(3, 4, true);
     image.print();
 
-    cout << image(0,0);
+    cout << "\n\n\n";
+
+    image = image * false;
+
+    image.print();
 
     return 0;
 
