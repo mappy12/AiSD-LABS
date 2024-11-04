@@ -131,6 +131,7 @@ public:
                         mult = numeric_limits<T>::max();
 
                     }
+
                     else if (mult < numeric_limits<T>::min()) {
 
                         mult = numeric_limits<T>::min();
@@ -142,11 +143,13 @@ public:
                         sum = numeric_limits<T>::max();
 
                     }
+
                     else if (sum < numeric_limits<T>::min() - mult) {
                        
                         sum = numeric_limits<T>::min();
 
                     }
+
                     else {
                         sum += mult;
                     }
@@ -161,26 +164,69 @@ public:
         return result;
 
     }
+
+
+    HalfToneImage operator+(const HalfToneImage& other) {
+        if (height != other.height || width != other.width)
+            throw invalid_argument("Addition is not possible: matrix sizes are not equal");
+
+        HalfToneImage result(height, width, false);
+
+        for (size_t i = 0; i < height; ++i) {
+            for (size_t j = 0; j < width; ++j) {
+
+                T sum = data[i][j] + other.data[i][j];
+
+                if (sum > numeric_limits<T>::max()) {
+
+                    result.data[i][j] = numeric_limits<T>::max();
+
+                }
+                else if (sum < numeric_limits<T>::min()) {
+
+                    result.data[i][j] = numeric_limits<T>::min();
+
+                }
+                else {
+                    result.data[i][j] = sum;
+                }
+            }
+        }
+
+        return result;
+
+    }
 };
 
 int main() {
 
     srand(time(0));
 
+    cout << "Multiplication: " << "\n\n\n";
+
     HalfToneImage<float> image(2, 3, true);
     HalfToneImage<float> image2(3, 2, true);
 
     image.print();
-
     cout << "\n\n\n";
-
     image2.print();
-
+    cout << "\n\n\n";
+    HalfToneImage<float> result = image * image2;
+    result.print();
     cout << "\n\n\n";
 
-    HalfToneImage<float> result = image * image2;
+    cout << "Addition:" << "\n\n\n";
 
-    result.print();
+    HalfToneImage<unsigned char> image3(2, 3, true);
+    image3.print();
+    cout << "\n\n\n";
+
+    HalfToneImage<unsigned char> image4(2, 3, true);
+    image4.print();
+    cout << "\n\n\n";
+
+    HalfToneImage<unsigned char> result2 = image3 + image4;
+    result2.print();
 
     return 0;
 
