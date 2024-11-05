@@ -3,6 +3,7 @@
 #include <ctime>
 #include <limits>
 
+
 using namespace std;
 
 
@@ -48,6 +49,9 @@ class HalfToneImage {
     }
 
 public:
+
+    double eps;
+
     HalfToneImage(int h, int w, bool randomFill) : height(h), width(w) {
         if (height < 0 || width < 0)
             throw std::invalid_argument("Invalid dimensions");
@@ -71,6 +75,18 @@ public:
         }
 
         delete[] data;
+    }
+
+    int getHeight() const {
+        return height;
+    }
+
+    int getWidth() const {
+        return width;
+    }
+
+    T getData(size_t row, size_t col) const {
+        return data[row][col];
     }
 
     void print() {
@@ -175,20 +191,18 @@ public:
         for (size_t i = 0; i < height; ++i) {
             for (size_t j = 0; j < width; ++j) {
 
-                T sum = data[i][j] + other.data[i][j];
-
-                if (sum > numeric_limits<T>::max()) {
+                if (data[i][j] + other.data[i][j] > numeric_limits<T>::max()) {
 
                     result.data[i][j] = numeric_limits<T>::max();
 
                 }
-                else if (sum < numeric_limits<T>::min()) {
+                else if (data[i][j] + other.data[i][j] < numeric_limits<T>::min()) {
 
                     result.data[i][j] = numeric_limits<T>::min();
 
                 }
                 else {
-                    result.data[i][j] = sum;
+                    result.data[i][j] = data[i][j] + other.data[i][j];
                 }
             }
         }
@@ -196,7 +210,37 @@ public:
         return result;
 
     }
+    
 };
+
+template<typename T>
+ostream& operator<<(ostream& os, const HalfToneImage<T>& image) {
+
+    for (size_t i = 0; i < image.getHeight(); ++i) {
+
+        for (size_t j = 0; j < image.getWidth(); ++j) {
+
+            if (is_same<T, unsigned char>::value) {
+
+                os << static_cast<int>(image.getData(i,j));
+                os << " ";
+
+            }
+
+            else {
+
+                os << image.getData(i, j);
+                os << " ";
+
+            }
+        }
+
+        os << "\n\n";
+
+    }
+
+    return os;
+}
 
 int main() {
 
@@ -227,6 +271,9 @@ int main() {
 
     HalfToneImage<unsigned char> result2 = image3 + image4;
     result2.print();
+
+    cout << "\n\nCout overloading\n\n";
+    cout << result2;
 
     return 0;
 
