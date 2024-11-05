@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <ctime>
 #include <limits>
+#include <cmath>
 
 
 using namespace std;
@@ -50,7 +51,7 @@ class HalfToneImage {
 
 public:
 
-    double eps;
+    static constexpr double eps = 1e-9;
 
     HalfToneImage(int h, int w, bool randomFill) : height(h), width(w) {
 
@@ -225,6 +226,29 @@ public:
         return result;
 
     }
+
+    bool operator==(const HalfToneImage& other) const {
+
+        if (height != other.height || width != other.width) {
+            return false;
+        }
+
+        for (size_t i = 0; i < height; ++i) {
+            for (size_t j = 0; j < width; ++j) {
+
+                if (fabs(data[i][j] - other.data[i][j]) > eps) {
+                    return false;
+                }
+
+            }
+        }
+        
+        return true;
+    }
+
+    bool operator!=(const HalfToneImage& other) const {
+        return !(*this == other);
+    }
     
 };
 
@@ -294,6 +318,10 @@ int main() {
 
     HalfToneImage<unsigned char> image5(image4);
     cout << image5;
+
+    cout << "\n\n\nChecking comparison overload for equalit\n\n\n";
+
+    cout << (image5 != image4);
 
     return 0;
 
