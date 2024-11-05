@@ -249,6 +249,16 @@ public:
     bool operator!=(const HalfToneImage& other) const {
         return !(*this == other);
     }
+
+    HalfToneImage& operator!() {
+        for (size_t i = 0; i < height; ++i) {
+            for (size_t j = 0; j < width; ++j) {
+                data[i][j] *= -1;
+            }
+        }
+
+        return *this;
+    }
     
 };
 
@@ -321,7 +331,13 @@ int main() {
 
     cout << "\n\n\nChecking comparison overload for equalit\n\n\n";
 
+    cout << (image5 == image4);
+
     cout << (image5 != image4);
+
+    cout << "\n\n\nOperator '!' check\n\n\n";
+    cout << image << "\n\n\n" << !image;
+    
 
     return 0;
 
