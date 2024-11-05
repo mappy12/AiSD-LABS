@@ -53,6 +53,7 @@ public:
     double eps;
 
     HalfToneImage(int h, int w, bool randomFill) : height(h), width(w) {
+
         if (height < 0 || width < 0)
             throw std::invalid_argument("Invalid dimensions");
         
@@ -66,6 +67,20 @@ public:
         }
         else {
             fillZero();
+        }
+    }
+
+    HalfToneImage(const HalfToneImage& other) : height(other.height), width(other.width) {
+
+        data = new T * [height];
+
+        for (size_t i = 0; i < height; ++i) {
+
+            data[i] = new T[width];
+
+            for (size_t j = 0; j < width; ++j) {
+                data[i][j] = other.data[i][j];
+            }
         }
     }
 
@@ -272,8 +287,13 @@ int main() {
     HalfToneImage<unsigned char> result2 = image3 + image4;
     result2.print();
 
-    cout << "\n\nCout overloading\n\n";
+    cout << "\n\nCout overloading\n\n\n";
     cout << result2;
+
+    cout << "\n\n\nCopy constructor check\n\n\n";
+
+    HalfToneImage<unsigned char> image5(image4);
+    cout << image5;
 
     return 0;
 
