@@ -260,7 +260,33 @@ public:
     }
 
     HalfToneImage operator-(const HalfToneImage& other) {
+        if (height != other.height || width != other.width) {
+            throw invalid_argument("Subtraction is not possible: matrix sizes are not equal");
+        }
 
+        HalfToneImage result(height, width, false);
+
+        for (size_t i = 0; i < height; ++i) {
+
+            for (size_t j = 0; j < width; ++j) {
+
+                if (data[i][j] - other.data[i][j] < numeric_limits<T>::min()) {
+                    result.data[i][j] = numeric_limits<T>::min();
+                }
+
+                else if (data[i][j] - other.data[i][j] > numeric_limits<T>::max()) {
+                    result.data[i][j] = numeric_limits<T>::max();
+                }
+
+                else {
+                    result.data[i][j] = data[i][j] - other.data[i][j];
+                }
+
+
+            }
+        }
+
+        return result;
     }
 
     bool operator==(const HalfToneImage& other) const {
