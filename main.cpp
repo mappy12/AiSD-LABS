@@ -85,6 +85,38 @@ public:
         }
     }
 
+    HalfToneImage& operator=(const HalfToneImage& other) {
+
+        if (this == &other) {
+            return *this;
+        }
+
+        for (size_t i = 0; i < height; ++i) {
+            delete[] data[i];
+        }
+
+        delete[] data;
+
+        height = other.height;
+        width = other.width;
+
+        data = new T * [height];
+        for (size_t i = 0; i < height; ++i) {
+            data[i] = new T[width];
+        }
+
+        for (size_t i = 0; i < height; ++i) {
+
+            for (size_t j = 0; j < width; ++j) {
+
+                data[i][j] = other.data[i][j];
+
+            }
+        }
+
+        return *this;
+    }
+
     ~HalfToneImage() {
         for (size_t i = 0; i < height; ++i) {
                 delete[] data[i];
@@ -224,6 +256,10 @@ public:
         }
 
         return result;
+
+    }
+
+    HalfToneImage operator-(const HalfToneImage& other) {
 
     }
 
