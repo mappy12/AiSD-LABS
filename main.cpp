@@ -49,12 +49,27 @@ public:
 
 
 	void push_tail(const LinkedList& other) {
-		Node<T>* p = other->head;
+		Node<T>* p = other.head;
 
 		while (p) {
 			this->push_tail(p->data);
 			p = p->next;
 		}
+	}
+
+	
+	void push_head(const T value) {
+		Node<T>* newNode = new Node<T>(value, head, nullptr);
+
+		if (!head) {
+			head = tail = newNode;
+		}
+		else {
+			head->prev = newNode;
+			head = newNode;
+		}
+
+		++size;
 	}
 
 
@@ -86,4 +101,8 @@ int main() {
 
 	cout << "Copy list:" << endl;
 	copyList.print();
+	cout << endl;
+
+	list.push_head(10);
+	list.print();
 }
