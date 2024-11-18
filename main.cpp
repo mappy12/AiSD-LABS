@@ -10,6 +10,8 @@ class LinkedList {
 		T data;
 		Node* next;
 		Node* prev;
+
+		Node(T value, Node* pNext = nullptr, Node* pPrev = nullptr) : data(value), next(pNext), prev(pPrev) {}
 	};
 
 	Node<T>* head;
@@ -20,8 +22,18 @@ public:
 
 	LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-	LinkedList(const LinkedList& other) {
+	void push_tail(const T value) {
+		Node<T>* newNode = new Node<T>(value, nullptr, tail);
 
+		if (!head) {
+			head = tail = newNode;
+		}
+		else {
+			tail->next = newNode;
+			tail = newNode;
+		}
+
+		++size;
 	}
 
 };
