@@ -36,8 +36,34 @@ public:
 		++size;
 	}
 
+	void push_tail(const LinkedList& other) {
+		Node<T>* p = other->head;
+
+		while (p) {
+			this->push_tail(p->data);
+			p = p->next;
+		}
+	}
+
+	void print() const {
+		Node<T>* p = head;
+		
+		while (p) {
+			cout << p->data << " ";
+			p = p->next;
+		}
+
+		cout << endl;
+	}
+
 };
 
 int main() {
+	LinkedList<int> list;
 
+	list.push_tail(2);
+	list.push_tail(3);
+	list.push_tail(15);
+
+	list.print();
 }
