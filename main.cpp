@@ -72,6 +72,36 @@ public:
 		++size;
 	}
 
+	void push_head(const LinkedList& other) {
+		Node<T>* p = other.tail;
+
+		while (p) {
+			push_head(p->data);
+			p = p->prev;
+		}
+	}
+
+	
+	void pop_tail() {
+		if (!tail) {
+			throw underflow_error("List is empty");
+		}
+
+		Node<T>* temp = tail;
+
+		tail = tail->prev;
+
+		if (tail) {
+			tail->next = nullptr;
+		}
+		else {
+			head = nullptr;
+		}
+
+		delete temp;
+		--size;
+	}
+
 
 	void print() const {
 		Node<T>* p = head;
@@ -96,13 +126,25 @@ int main() {
 
 	LinkedList<int> copyList(list);
 
-	cout << "Original list:" << endl;
+	cout << "Original list:\n" << endl;
 	list.print();
 
-	cout << "Copy list:" << endl;
+	cout << "\nCopy list:\n" << endl;
 	copyList.print();
 	cout << endl;
 
+	cout << "Push head elm:\n" << endl;
+
 	list.push_head(10);
+	list.print();
+
+	cout << "\nPush head other Node:" << endl;
+
+	list.push_head(copyList);
+	cout << endl;
+	list.print();
+
+	cout << "\nPop tail:\n" << endl;
+	list.pop_tail();
 	list.print();
 }
