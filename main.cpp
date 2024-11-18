@@ -72,6 +72,7 @@ public:
 		++size;
 	}
 
+
 	void push_head(const LinkedList& other) {
 		Node<T>* p = other.tail;
 
@@ -96,6 +97,27 @@ public:
 		}
 		else {
 			head = nullptr;
+		}
+
+		delete temp;
+		--size;
+	}
+
+
+	void pop_head() {
+		if (!head) {
+			throw underflow_error("List is empty");
+		}
+
+		Node<T>* temp = head;
+
+		head = head->next;
+
+		if (head) {
+			head->prev = nullptr;
+		}
+		else {
+			tail = nullptr;
 		}
 
 		delete temp;
@@ -146,5 +168,9 @@ int main() {
 
 	cout << "\nPop tail:\n" << endl;
 	list.pop_tail();
+	list.print();
+
+	cout << "\nPop head:\n" << endl;
+	list.pop_head();
 	list.print();
 }
