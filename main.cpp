@@ -22,6 +22,17 @@ public:
 
 	LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
+
+	LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
+		Node<T>* p = other.head;
+
+		while (p) {
+			push_tail(p->data);
+			p = p->next;
+		}
+	}
+
+
 	void push_tail(const T value) {
 		Node<T>* newNode = new Node<T>(value, nullptr, tail);
 
@@ -36,6 +47,7 @@ public:
 		++size;
 	}
 
+
 	void push_tail(const LinkedList& other) {
 		Node<T>* p = other->head;
 
@@ -44,6 +56,7 @@ public:
 			p = p->next;
 		}
 	}
+
 
 	void print() const {
 		Node<T>* p = head;
@@ -56,6 +69,7 @@ public:
 		cout << endl;
 	}
 
+
 };
 
 int main() {
@@ -65,5 +79,11 @@ int main() {
 	list.push_tail(3);
 	list.push_tail(15);
 
+	LinkedList<int> copyList(list);
+
+	cout << "Original list:" << endl;
 	list.print();
+
+	cout << "Copy list:" << endl;
+	copyList.print();
 }
