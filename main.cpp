@@ -32,6 +32,20 @@ public:
 		}
 	}
 
+	~LinkedList() {
+		Node<T>* p = head;
+
+		while (p) {
+			Node<T>* next = p->next;
+
+			delete p;
+
+			p = next;
+		}
+
+		size = 0;
+	}
+
 
 	void push_tail(const T value) {
 		Node<T>* newNode = new Node<T>(value, nullptr, tail);
@@ -164,6 +178,18 @@ public:
 	}
 
 	T& operator[](size_t index) const {
+		if (index >= size) throw out_of_range("Invalid index");
+
+		Node<T>* p = head;
+
+		for (size_t i = 0; i < index; ++i) {
+			p = p->next;
+		}
+
+		return p->data;
+	}
+
+	T& operator[](size_t index) {
 		if (index >= size) throw out_of_range("Invalid index");
 
 		Node<T>* p = head;
