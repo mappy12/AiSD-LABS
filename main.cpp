@@ -124,6 +124,45 @@ public:
 		--size;
 	}
 
+	void delete_node(const T value) {
+		Node<T>* p = head;
+
+		while (p) {
+
+			if (p->data == value) {
+
+				if (size == 1) {
+					head = tail = nullptr;
+					size = 0;
+				}
+				else if(p == head) {
+					head = head->next;
+					head->prev = nullptr;
+					--size;
+				}
+				else if (p == tail) {
+					tail = tail->prev;
+					tail->next = nullptr;
+					--size;
+				}
+				else {
+					p->prev->next = p->next;
+					p->next->prev = p->prev;
+				}
+
+				Node<T>* deleteNode = p;
+
+				p = p->next;
+
+				delete deleteNode;
+				--size;
+			}
+			else {
+				p = p->next;
+			}
+		}
+	}
+
 
 	void print() const {
 		Node<T>* p = head;
@@ -145,6 +184,7 @@ int main() {
 	list.push_tail(2);
 	list.push_tail(3);
 	list.push_tail(15);
+	list.push_tail(2);
 
 	LinkedList<int> copyList(list);
 
@@ -173,4 +213,9 @@ int main() {
 	cout << "\nPop head:\n" << endl;
 	list.pop_head();
 	list.print();
+
+	cout << "\nDelete node:\n" << endl;
+	list.delete_node(2);
+	list.print();
+
 }
