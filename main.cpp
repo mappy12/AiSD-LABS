@@ -163,6 +163,18 @@ public:
 		}
 	}
 
+	T& operator[](size_t index) const {
+		if (index >= size) throw out_of_range("Invalid index");
+
+		Node<T>* p = head;
+
+		for (size_t i = 0; i < index; ++i) {
+			p = p->next;
+		}
+
+		return p->data;
+	}
+
 
 	void print() const {
 		Node<T>* p = head;
@@ -217,5 +229,8 @@ int main() {
 	cout << "\nDelete node:\n" << endl;
 	list.delete_node(2);
 	list.print();
+
+	cout << "\nOperator []:\n" << endl;
+	cout << list[0];
 
 }
