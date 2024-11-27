@@ -1,4 +1,6 @@
 #include <iostream>
+#include <ctime>
+#include <string>
 
 using namespace std;
 
@@ -20,6 +22,15 @@ class LinkedList {
 
 public:
 
+	LinkedList(size_t count) : head(nullptr), tail(nullptr), size(0) {
+		srand(time(0));
+
+		for (size_t i = 0; i < count; ++i) {
+			string track = "Track " + to_string(rand() % count + 1);
+			push_tail(track);
+		}
+	}
+
 	LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
 
@@ -31,6 +42,7 @@ public:
 			p = p->next;
 		}
 	}
+
 
 	~LinkedList() {
 		Node<T>* p = head;
@@ -44,6 +56,57 @@ public:
 		}
 
 		size = 0;
+	}
+
+	void playNormal() {
+		Node<T>* p = head;
+
+		if (size == 0) {
+			cout << "Playlist is empty!" << endl;
+			return;
+		}
+
+		while (p) {
+			cout << "Playing: " << p->data << endl;
+			cin.get();
+			p = p->next;
+		}
+
+		cout << "The tracks are over" << endl;
+	}
+
+	void playRandom() {
+		if (size == 0) {
+			cout << "Playlist is empty!" << endl;
+			return;
+		}
+
+		srand(time(0));
+
+
+		bool* played = new bool[size]();
+		size_t playedCount = 0;
+
+		while (playedCount < size) {
+			size_t randomIdx = rand() % size;
+
+			if (!played[randomIdx]) {
+				Node* p = head;
+				for (size_t i = 0; i < randomIdx; ++i) {
+					p = p->next;
+				}
+
+				cout << "Playing: " << p->data << endl;
+
+				played[randomIdx] = true;
+				++playedCount;
+
+				cin.get();
+			}
+		}
+
+		cout << "The tracks are over";
+		delete[] played;
 	}
 
 
@@ -216,6 +279,7 @@ public:
 
 };
 
+
 int main() {
 	LinkedList<int> list;
 
@@ -258,5 +322,13 @@ int main() {
 
 	cout << "\nOperator []:\n" << endl;
 	cout << list[0];
+	cout << endl << endl;
 
+	cout << "| | | | | | | | | | | | | | | | | | |Checking the practical task| | | | | | | | | | | | | | | | | | |" << endl << endl;
+	LinkedList<string> playlist(10);
+	cout << "Playlist: ";
+	playlist.print();
+	cout << endl << "-------------PLAYLIST-------------" << endl << endl;
+
+	playlist.playNormal();
 }
