@@ -4,6 +4,7 @@
 using namespace std;
 
 ostream& operator<<(ostream& os, vector<int> arr) {
+
     size_t size = arr.size();
     
     for (size_t i = 0; i < size; ++i) {
@@ -30,7 +31,37 @@ vector<int> bubbleSort(vector<int> arr) {
     return arr;
 }
 
+vector<int> shakeSort(vector<int> arr) {
+
+    size_t size = arr.size();
+
+    int start = 0;
+    int end = size - 1;
+    
+    while (start <= end) {
+        for (size_t i = start; i <= end - 1; ++i) {
+            if (arr[i] > arr[i + 1]) {
+                swap(arr[i], arr[i + 1]);
+            }
+        }
+
+        ++start;
+
+        for (size_t i = end; i >= start; --i) {
+            if (arr[i] < arr[i - 1]) {
+                swap(arr[i], arr[i - 1]);
+            }
+        }
+
+        --end;
+    }
+
+    return arr;
+
+}
+
 int main() {
+
     vector<int> arr;
 
     arr.push_back(10);
@@ -48,5 +79,9 @@ int main() {
     vector<int> bsArr = bubbleSort(arr);
 
     cout << bsArr;
+
+    vector<int> ssArr = shakeSort(arr);
+
+    cout << ssArr;
 
 }
