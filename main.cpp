@@ -81,11 +81,50 @@ stats shakeSort(vector<int>& arr) {
 
 }
 
-vector<int> quickSort(vector<int> arr) {
+stats quickSort(vector<int>& arr, size_t left, size_t right) {
     
     size_t size = arr.size();
+    stats s;
 
+    size_t i = left;
+    size_t j = right;
 
+    int middle = arr[(left + right) / 2];
+
+    if (size == 2) {
+        if (arr[0] > arr[1]) {
+            ++s.comparisonCount;
+            swap(arr[0], arr[1]);
+            s.copyCount += 3;
+        }
+    }
+
+    if (size >= 3) {
+        while (i <= j) {
+            while(arr[i] < arr[middle]) {
+                ++s.comparisonCount;
+                ++i;
+            }
+
+            while (arr[j] > arr[middle]) {
+                ++s.comparisonCount;
+                --j;
+            }
+
+            if (i <= j) {
+                swap(arr[i], arr[j]);
+                s.copyCount += 3;
+
+                ++i;
+                --j;
+            }
+        }
+
+        if (left < j) quickSort(arr, left , j);
+        if (right > i) quickSort(arr, i, right);
+    }
+
+    return s;
 }
 
 int main() {
@@ -134,6 +173,26 @@ int main() {
     cout << arr2 << endl;
     cout << "Comparsion count: " << ssStats.comparisonCount << endl;
     cout << "Copy count: " << ssStats.copyCount << endl << endl;
-    
 
+    vector<int> arr3;
+    arr3.push_back(20);
+    arr3.push_back(91);
+    arr3.push_back(111);
+    arr3.push_back(2);
+    arr3.push_back(9);
+    arr3.push_back(231);
+    arr3.push_back(9);
+    arr3.push_back(73);
+    arr3.push_back(97);
+
+    cout << "----------------------------------\n";
+    cout << "Array_3: ";
+    cout << arr3;
+    cout << "----------------------------------\n\n";
+
+    cout << "-----------------Quick Sort-----------------\n\n";
+    stats qsStats = quickSort(arr3, 0, arr3.size() - 1);
+    cout << arr3 << endl;
+    cout << "Comparsion count: " << qsStats.comparisonCount << endl;
+    cout << "Copy count: " << qsStats.copyCount << endl << endl;
 }
