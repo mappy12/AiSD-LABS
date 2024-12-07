@@ -89,7 +89,7 @@ stats quickSort(vector<int>& arr, size_t left, size_t right) {
     size_t i = left;
     size_t j = right;
 
-    int middle = arr[(left + right) / 2];
+    int middle = (left + right) / 2;
 
     if (size == 2) {
         if (arr[0] > arr[1]) {
