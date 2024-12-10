@@ -127,6 +127,38 @@ stats quickSort(vector<int>& arr, size_t left, size_t right) {
     return s;
 }
 
+void createRandomArr(vector<int>& arr, size_t size) {
+    srand(time(0));
+
+    for (size_t i = 0; i < size; ++i) {
+        arr[i] = rand() % 1000;
+    }
+}
+
+void createRandomArrays(vector<int>& arr, vector<size_t> sizes) {
+
+    size_t totalComparisons = 0;
+    size_t totalCopies = 0;
+
+    for (size_t size : sizes) {
+        for (size_t i = 0; i < 100; ++i) {
+            createRandomArr(arr, size);
+
+
+            stats bsStats = bubbleSort(arr);
+
+            totalComparisons += bsStats.comparisonCount;
+            totalCopies += bsStats.copyCount;
+        }
+    }
+
+    double avgComparisons = totalComparisons / 100;
+    double avgCopies = totalCopies / 100;
+
+    cout << "Average of comparisons: " << avgComparisons;
+    cout << "Average of copies: " << avgCopies;
+}
+
 int main() {
 
     vector<int> arr1;
@@ -195,4 +227,22 @@ int main() {
     cout << arr3 << endl;
     cout << "Comparsion count: " << qsStats.comparisonCount << endl;
     cout << "Copy count: " << qsStats.copyCount << endl << endl;
+
+    cout << "---------------------------------------------------------------------------\n";
+    cout << "Second Task:" << endl << endl;
+
+    vector<size_t> sizes;
+
+    for (size_t i = 1000; i <= 100000; i += 1000) {
+        sizes.push_back(i);
+    }
+
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        cout << sizes[i] << " ";
+    }
+
+    vector<vector<int>> arr4;
+
+    createRandomArrays(arr4, sizes);
+
 }
