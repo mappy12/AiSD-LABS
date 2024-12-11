@@ -122,7 +122,7 @@ stats quickSort(vector<int>& arr, size_t left, size_t right) {
         }
 
         if (left < j) quickSort(arr, left , j);
-        if (right > i) quickSort(arr, i, right);
+        if (i < right) quickSort(arr, i, right);
     }
 
     return s;
@@ -144,7 +144,7 @@ vector<int> createRandomArr(size_t size) {
 void calcStatsRandom() {
     stats s, total;
 
-    vector<size_t> sizes = { 1000, 2000, 3000 };
+    vector<size_t> sizes = { 1000, 2000, 3000};
 
     for (size_t size : sizes) {
         cout << "\nSize of array: " << size << endl;
@@ -185,6 +185,52 @@ void calcStatsRandom() {
     }
 
 }
+
+
+vector<int> createSortedArr(size_t size) {
+    vector<int> arr(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        arr[i] = i;
+    }
+
+    return arr;
+}
+
+void calcStatsSorted() {
+    stats s, total;
+
+    vector<size_t> sizes = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 25000, 50000, 100000 };
+
+    for (size_t size : sizes) {
+        cout << "\nSize of array: " << size << endl;
+
+        total.comparisonCount = 0;
+        total.copyCount = 0;
+
+        vector<int> arr = createSortedArr(size);
+
+        s = bubbleSort(arr);
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+
+        s = shakeSort(arr);
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+
+        s = quickSort(arr, 0, arr.size() - 1);
+
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+        
+        cout << "Ñomparison count: " << total.comparisonCount << endl;
+        cout << "Ñopy count: " << total.copyCount << endl;
+    }
+}
+
 
 int main() {
 
@@ -258,6 +304,5 @@ int main() {
     cout << "---------------------------------------------------------------------------\n";
     cout << "Second Task:" << endl << endl;
 
-    calcStatsRandom();
-
+    calcStatsSorted();
 }
