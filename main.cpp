@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <functional>
 
 using namespace std;
 
@@ -127,36 +128,62 @@ stats quickSort(vector<int>& arr, size_t left, size_t right) {
     return s;
 }
 
-void createRandomArr(vector<int>& arr, size_t size) {
+
+vector<int> createRandomArr(size_t size) {
+    vector<int> arr(size);
+
     srand(time(0));
 
     for (size_t i = 0; i < size; ++i) {
         arr[i] = rand() % 1000;
     }
+
+    return arr;
 }
 
-void createRandomArrays(vector<int>& arr, vector<size_t> sizes) {
+void calcStatsRandom() {
+    stats s, total;
 
-    size_t totalComparisons = 0;
-    size_t totalCopies = 0;
+    vector<size_t> sizes = { 1000, 2000, 3000 };
 
     for (size_t size : sizes) {
+        cout << "\nSize of array: " << size << endl;
+        
+        total.comparisonCount = 0;
+        total.copyCount = 0;
+
         for (size_t i = 0; i < 100; ++i) {
-            createRandomArr(arr, size);
+            vector<int> arr = createRandomArr(size);
 
+            s = bubbleSort(arr);
 
-            stats bsStats = bubbleSort(arr);
-
-            totalComparisons += bsStats.comparisonCount;
-            totalCopies += bsStats.copyCount;
+            total.comparisonCount += s.comparisonCount;
+            total.copyCount += s.copyCount;
         }
+
+        for (size_t i = 0; i < 100; ++i) {
+            vector<int> arr = createRandomArr(size);
+
+            s = shakeSort(arr);
+
+            total.comparisonCount += s.comparisonCount;
+            total.copyCount += s.copyCount;
+        }
+
+        for (size_t i = 0; i < 100; ++i) {
+            vector<int> arr = createRandomArr(size);
+
+            s = quickSort(arr, 0, arr.size() - 1);
+
+            total.comparisonCount += s.comparisonCount;
+            total.copyCount += s.copyCount;
+        }
+
+        cout << "Avg comparison count: " << total.comparisonCount / 100 << endl;
+        cout << "Avg copy count: " << total.copyCount / 100 << endl;
+
     }
 
-    double avgComparisons = totalComparisons / 100;
-    double avgCopies = totalCopies / 100;
-
-    cout << "Average of comparisons: " << avgComparisons;
-    cout << "Average of copies: " << avgCopies;
 }
 
 int main() {
@@ -231,18 +258,6 @@ int main() {
     cout << "---------------------------------------------------------------------------\n";
     cout << "Second Task:" << endl << endl;
 
-    vector<size_t> sizes;
-
-    for (size_t i = 1000; i <= 100000; i += 1000) {
-        sizes.push_back(i);
-    }
-
-    for (size_t i = 0; i < sizes.size(); ++i) {
-        cout << sizes[i] << " ";
-    }
-
-    vector<vector<int>> arr4;
-
-    createRandomArrays(arr4, sizes);
+    calcStatsRandom();
 
 }
