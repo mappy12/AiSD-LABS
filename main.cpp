@@ -144,7 +144,7 @@ vector<int> createRandomArr(size_t size) {
 void calcAvgStatsRandom() {
     stats s, total;
 
-    vector<size_t> sizes = { 1000, 2000, 3000};
+    vector<size_t> sizes = { 100000 };
 
     for (size_t size : sizes) {
         cout << "\nSize of array: " << size << endl;
@@ -226,8 +226,8 @@ void calcAvgStatsSorted() {
         total.comparisonCount += s.comparisonCount;
         total.copyCount += s.copyCount;
         
-        cout << "Ñomparison count: " << total.comparisonCount << endl;
-        cout << "Ñopy count: " << total.copyCount << endl;
+        cout << "Comparison count: " << total.comparisonCount << endl;
+        cout << "Copy count: " << total.copyCount << endl;
     }
 }
 
@@ -352,5 +352,5 @@ int main() {
     cout << "---------------------------------------------------------------------------\n";
     cout << "Second Task:" << endl << endl;
 
-    calcAvgStatsReverse();
+    calcAvgStatsRandom();
 }
