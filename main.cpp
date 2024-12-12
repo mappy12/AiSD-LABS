@@ -12,7 +12,7 @@ struct stats {
 ostream& operator<<(ostream& os, vector<int> arr) {
 
     size_t size = arr.size();
-    
+                                                 
     for (size_t i = 0; i < size; ++i) {
         os << arr[i] << " ";
     }
@@ -82,13 +82,13 @@ stats shakeSort(vector<int>& arr) {
 
 }
 
-stats quickSort(vector<int>& arr, size_t left, size_t right) {
+stats quickSort(vector<int>& arr, int left, int right) {
     
     size_t size = arr.size();
     stats s;
 
-    size_t i = left;
-    size_t j = right;
+    int i = left;
+    int j = right;
 
     int middle = (left + right) / 2;
 
@@ -141,7 +141,7 @@ vector<int> createRandomArr(size_t size) {
     return arr;
 }
 
-void calcStatsRandom() {
+void calcAvgStatsRandom() {
     stats s, total;
 
     vector<size_t> sizes = { 1000, 2000, 3000};
@@ -197,7 +197,7 @@ vector<int> createSortedArr(size_t size) {
     return arr;
 }
 
-void calcStatsSorted() {
+void calcAvgStatsSorted() {
     stats s, total;
 
     vector<size_t> sizes = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 25000, 50000, 100000 };
@@ -228,6 +228,54 @@ void calcStatsSorted() {
         
         cout << "Ñomparison count: " << total.comparisonCount << endl;
         cout << "Ñopy count: " << total.copyCount << endl;
+    }
+}
+
+vector<int> createReverseArr(size_t size) {
+    vector<int> arr(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        arr[i] = size - i;
+    }
+
+    return arr;
+}
+
+void calcAvgStatsReverse() {
+    stats s, total;
+
+    vector<size_t> sizes = { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 25000, 50000, 100000 };
+
+    for (size_t size : sizes) {
+        cout << "\nSize of array: " << size << endl;
+
+        total.comparisonCount = 0;
+        total.copyCount = 0;
+
+        vector<int> arr1 = createReverseArr(size);
+
+        s = bubbleSort(arr1);
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+
+        vector<int> arr2 = createReverseArr(size);
+
+        s = shakeSort(arr2);
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+
+        vector<int> arr3 = createReverseArr(size);
+
+        s = quickSort(arr3, 0, arr3.size() - 1);
+
+
+        total.comparisonCount += s.comparisonCount;
+        total.copyCount += s.copyCount;
+
+        cout << "Comparison count: " << total.comparisonCount << endl;
+        cout << "Copy count: " << total.copyCount << endl;
     }
 }
 
@@ -304,5 +352,5 @@ int main() {
     cout << "---------------------------------------------------------------------------\n";
     cout << "Second Task:" << endl << endl;
 
-    calcStatsSorted();
+    calcAvgStatsReverse();
 }
