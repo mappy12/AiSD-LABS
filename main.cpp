@@ -171,7 +171,7 @@ void calcAvgStatsRandom() {
 
     stats s, total;
 
-    vector<size_t> sizes = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 25000, 50000, 100000};
+    vector<size_t> sizes = { 50000, 100000 };
 
     for (size_t size : sizes) {
 
@@ -437,5 +437,5 @@ int main() {
     cout << "---------------------------------------------------------------------------\n";
     cout << endl << "Second Task:" << endl << endl;
 
-    calcAvgStatsSorted();
+    calcAvgStatsRandom();
 }
