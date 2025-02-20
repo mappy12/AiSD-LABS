@@ -1,5 +1,7 @@
 #include <iostream>
 
+using namespace std;
+
 class Set {
 
 	struct TreeElm {
@@ -21,5 +23,26 @@ public:
 	Set(int data) {
 		root = new TreeElm(data);
 	}
+
+	~Set() {
+		clear(root);
+	}
+
+	void clear(TreeElm* node) {
+		if (!node) return;
+
+		clear(node->left);
+		clear(node->right);
+
+		delete node;
+	}
+
 };
+
+
+int main() {
+	cout << "lab1";
+}
+
+
 
