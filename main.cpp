@@ -16,6 +16,48 @@ class Set {
 
 	TreeElm* root;
 
+	bool insert(TreeElm*& node, int key) {
+
+		if (!node) {
+
+			node = new TreeElm(key);
+			return true;
+
+		}
+
+		if (key < node->key) {
+
+			if (!node->left) {
+
+				node->left = new TreeElm(key);
+				return true;
+
+			}
+			else {
+
+				return insert(node->left, key);
+			}
+
+
+		}
+		else if (key > node->key) {
+
+			if (!node->right) {
+
+				node->right = new TreeElm(key);
+				return true;
+
+			}
+			else {
+
+				return insert(node->right, key);
+
+			}
+		}
+
+		return false;
+	}
+
 public:
 
 	Set() : root(nullptr) { }
@@ -41,43 +83,8 @@ public:
 		delete node;
 	}
 
-	bool insert(TreeElm*& node, int key) {
-
-		if (!node) {
-
-			node = new TreeElm(key);
-			return true;
-
-		}
-
-		if (key < node->key) {
-
-			if (!node->left) {
-
-				node->left = new TreeElm(key);
-				return true;
-
-			} else {
-
-				return insert(node->left, key);
-			}
-
-
-		} else if(key > node->key) {
-
-			if (!node->right) {
-
-				node->right = new TreeElm(key);
-				return true;
-
-			} else {
-
-				return insert(node->right, key);
-
-			}
-		}
-
-		return false;
+	bool insert(int key) {
+		return insert(root, key);
 	}
 
 	void inOrder(TreeElm* node) {
@@ -93,13 +100,21 @@ public:
 		inOrder(root);
 	}
 
-
 };
 
 
 int main() {
 	Set tree1(10);
 	
+	cout << tree1.insert(1);
+	cout << tree1.insert(100);
+	tree1.insert(52);
+	tree1.insert(51);
+	tree1.insert(9);
+	tree1.insert(17);
+	tree1.insert(36);
+	tree1.insert(11);
+
 	tree1.print();
 }
 
