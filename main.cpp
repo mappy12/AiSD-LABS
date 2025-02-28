@@ -16,6 +16,18 @@ class Set {
 
 	TreeElm* root;
 
+	TreeElm* copyTree(TreeElm* node) {
+
+		if (!node) return nullptr;
+
+		TreeElm* newNode = new TreeElm(node->key);
+
+		newNode->left = copyTree(node->left);
+		newNode->right = copyTree(node->right);
+
+		return newNode;
+	}
+
 	bool insert(TreeElm*& node, int key) {
 
 		if (!node) {
@@ -144,6 +156,20 @@ public:
 		root = new TreeElm(key);
 	}
 
+	Set(const Set& other) {
+		root = copyTree(other.root);
+	}
+
+	Set& operator=(const Set& other) {
+		if (this != &other) {
+			clear(root);
+
+			root = copyTree(other.root);
+		}
+
+		return *this;
+	}
+
 	~Set() {
 		clear(root);
 	}
@@ -210,7 +236,18 @@ int main() {
 	tree1.print();
 	cout << endl;
 	cout << endl;
-	
+
+	Set tree2(tree1);
+
+	cout << "Copy tree1 (Copy constructor): ";
+	tree2.print();
+	cout << endl;
+
+	Set tree3 = tree1;
+	cout << "Copy tree1 (Assignment operator): ";
+	tree3.print();
+	cout << endl;
+
 }
 
 
