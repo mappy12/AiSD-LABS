@@ -188,33 +188,29 @@ public:
 int main() {
 	Set tree1(10);
 	
-	tree1.insert(1);
-	tree1.insert(100);
-	tree1.insert(52);
-	tree1.insert(51);
-	tree1.insert(9);
-	tree1.insert(17);
-	tree1.insert(36);
-	tree1.insert(11);
+	cout << "1: " << (tree1.insert(1) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "100: " << (tree1.insert(100) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "52: " << (tree1.insert(52) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "51: " << (tree1.insert(51) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "9: " << (tree1.insert(9) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "17: " << (tree1.insert(17) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "36: " << (tree1.insert(36) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "11: " << (tree1.insert(11) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl << endl;
 
+	cout << "Tree after insertion: ";
 	tree1.print();
 	cout << endl << endl;
 
-	tree1.erase(1);
-	tree1.erase(100);
-	tree1.erase(52);
-	tree1.erase(51);
+	cout << "1: " << (tree1.erase(1) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "9: " << (tree1.erase(9) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "36: " << (tree1.erase(36) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "100: " << (tree1.erase(100) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl << endl;
 
+	cout << "Tree after deletion: ";
 	tree1.print();
 	cout << endl;
 	cout << endl;
-
-	if (tree1.contains(11) == 1) {
-		cout << "Element found";
-	}
-	else cout << "Element not found";
-
-	cout << endl;
+	
 }
 
 
