@@ -125,16 +125,23 @@ class Set {
 
 	}
 
+	bool contains(TreeElm* node, int key) {
+
+		if (!node) return false;
+
+		if (key == node->key) return true;
+
+		if (key < node->key) return contains(node->left, key);
+
+		else return contains(node->right, key);
+	}
+
 public:
 
 	Set() : root(nullptr) { }
 
 	Set(int key) {
 		root = new TreeElm(key);
-	}
-
-	Set(const Set& other) {
-
 	}
 
 	~Set() {
@@ -156,6 +163,10 @@ public:
 
 	bool erase(int key) {
 		return erase(root, key);
+	}
+
+	bool contains(int key) {
+		return contains(root, key);
 	}
 
 	void inOrder(TreeElm* node) {
@@ -195,6 +206,14 @@ int main() {
 	tree1.erase(51);
 
 	tree1.print();
+	cout << endl;
+	cout << endl;
+
+	if (tree1.contains(11) == 1) {
+		cout << "Element found";
+	}
+	else cout << "Element not found";
+
 	cout << endl;
 }
 
