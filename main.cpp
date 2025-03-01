@@ -223,9 +223,38 @@ size_t lcg() {
 
 
 double insertionTime(Set& tree, int elementsCount) {
-	auto start = high_resolution_clock::now();
+
+	auto start = chrono::high_resolution_clock::now();
+
+	for (size_t i = 0; i < elementsCount; ++i) {
+		tree.insert(lcg());
+	}
+
+	auto end = chrono::high_resolution_clock::now();
+
+	chrono::duration<double> diff = end - start;
+
+	return diff.count();
+
 }
 
+double searchTime(Set& tree, int elementsCount) {
+
+	auto start = chrono::high_resolution_clock::now();
+
+	for (size_t i = 0; i < elementsCount; ++i) {
+
+		tree.contains(lcg());
+
+	}
+
+	auto end = chrono::high_resolution_clock::now();
+
+	chrono::duration<double> diff = end - start;
+
+	return diff.count();
+
+}
 
 int main() {
 	Set tree1(10);
