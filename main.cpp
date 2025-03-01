@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
@@ -211,9 +212,24 @@ public:
 };
 
 
+
+size_t lcg() {
+
+	static size_t x = 0;
+	x = (1021 * x + 24631) % 116640;
+	return x;
+
+}
+
+
+double insertionTime(Set& tree, int elementsCount) {
+	auto start = high_resolution_clock::now();
+}
+
+
 int main() {
 	Set tree1(10);
-	
+
 	cout << "1: " << (tree1.insert(1) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
 	cout << "100: " << (tree1.insert(100) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
 	cout << "52: " << (tree1.insert(52) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
@@ -249,6 +265,3 @@ int main() {
 	cout << endl;
 
 }
-
-
-
