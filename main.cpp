@@ -256,6 +256,24 @@ double searchTime(Set& tree, int elementsCount) {
 
 }
 
+double  deletionTime(Set& tree, int elementsCount) {
+
+	auto start = chrono::high_resolution_clock::now();
+
+	for (size_t i = 0; i < elementsCount; ++i) {
+
+		tree.erase(lcg());
+
+	}
+
+	auto end = chrono::high_resolution_clock::now();
+
+	chrono::duration<double> diff = end - start;
+
+	return diff.count();
+
+}
+
 int main() {
 	Set tree1(10);
 
