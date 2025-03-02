@@ -439,6 +439,47 @@ void getAvgTime(vector<int> vec) {
 	}
 }
 
+void quickSort(vector<int>& arr, int left, int right) {
+
+	size_t size = arr.size();
+
+	int i = left;
+	int j = right;
+
+	int middle = (left + right) / 2;
+
+	if (size == 2) {
+		if (arr[0] > arr[1]) {
+			swap(arr[0], arr[1]);
+		}
+	}
+
+	if (size >= 3) {
+		while (i <= j) {
+			while (arr[i] < arr[middle]) {
+				++i;
+			}
+
+			while (arr[j] > arr[middle]) {
+				--j;
+			}
+
+			if (i <= j) {
+
+				if (arr[i] != arr[j]) {
+					swap(arr[i], arr[j]);
+				}
+
+				++i;
+				--j;
+			}
+		}
+
+		if (left < j) quickSort(arr, left, j);
+		if (i < right) quickSort(arr, i, right);
+	}
+}
+
 
 int main() {
 	Set tree1(10);
@@ -482,6 +523,14 @@ int main() {
 
 	vector<int> vec;
 	getAvgTime(vec);
+
+	vector<int> vec1 = { 1, 10, 4, 190, 100, 2, 3, 8, 54, 743 };
+
+	quickSort(vec1, 0, vec1.size() - 1);
+
+	for (size_t i = 0; i < vec1.size(); ++i) {
+		cout << vec1[i] << " ";
+	}
 
 	return 0;
 }
