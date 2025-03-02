@@ -439,45 +439,81 @@ void getAvgTime(vector<int> vec) {
 	}
 }
 
-void quickSort(vector<int>& arr, int left, int right) {
+
+vector<int> shakeSort(vector<int>& arr) {
+
+	bool flag = false;
 
 	size_t size = arr.size();
 
-	int i = left;
-	int j = right;
+	int start = 0;
+	int end = size - 1;
 
-	int middle = (left + right) / 2;
+	while (start <= end) {
 
-	if (size == 2) {
-		if (arr[0] > arr[1]) {
-			swap(arr[0], arr[1]);
-		}
-	}
+		flag = false;
 
-	if (size >= 3) {
-		while (i <= j) {
-			while (arr[i] < arr[middle]) {
-				++i;
-			}
+		for (size_t i = start; i <= end - 1; ++i) {
 
-			while (arr[j] > arr[middle]) {
-				--j;
-			}
+			if (arr[i] > arr[i + 1]) {
+				swap(arr[i], arr[i + 1]);
 
-			if (i <= j) {
-
-				if (arr[i] != arr[j]) {
-					swap(arr[i], arr[j]);
-				}
-
-				++i;
-				--j;
+				flag = true;
 			}
 		}
 
-		if (left < j) quickSort(arr, left, j);
-		if (i < right) quickSort(arr, i, right);
+		++start;
+
+		if (!flag) {
+			return arr;
+		}
+
+		flag = false;
+
+		for (size_t i = end; i >= start; --i) {
+
+			if (arr[i] < arr[i - 1]) {
+				swap(arr[i], arr[i - 1]);
+
+				flag = true;
+			}
+		}
+
+		--end;
+
+		if (!flag) {
+			return arr;
+		}
 	}
+
+	return arr;
+
+}
+
+
+vector<int> getUnique(vector<int>& vec) {
+
+	vector<int> sortedVec = shakeSort(vec);
+
+	vector<int> uniqueVec;
+
+	for (size_t i = 0; i < sortedVec.size(); ++i) {
+
+		bool isUnique = true;
+
+		if (i > 0 && sortedVec[i - 1] == sortedVec[i])
+
+			isUnique = false;
+
+		if ((i < sortedVec.size() - 1) && sortedVec[i] == sortedVec[i + 1])
+
+			isUnique = false;
+
+		if (isUnique) uniqueVec.push_back(sortedVec[i]);
+
+	}
+
+	return uniqueVec;
 }
 
 
@@ -524,13 +560,29 @@ int main() {
 	vector<int> vec;
 	getAvgTime(vec);
 
-	vector<int> vec1 = { 1, 10, 4, 190, 100, 2, 3, 8, 54, 743 };
+	cout << endl << endl << "------------------------------------------------------------------------------" << endl << endl;
+	cout << "/////////////////////////////" << "Practice Task" << "/////////////////////////////" << endl << endl;
 
-	quickSort(vec1, 0, vec1.size() - 1);
+	vector<int> vec1 = { 1, 3, 10, 4, 190, 100, 10, 2, 3, 8, 54, 743, 43,
+		41, 90, 81, 100, 7, 5, 73, 69, 41, 10, 2};
+
+	cout << "Vector: ";
 
 	for (size_t i = 0; i < vec1.size(); ++i) {
 		cout << vec1[i] << " ";
 	}
+
+	cout << endl << endl;
+
+	vector<int> uniqueVec = getUnique(vec1);
+
+	cout << "Unique vector: ";
+
+	for (size_t i = 0; i < uniqueVec.size(); ++i) {
+		cout << uniqueVec[i] << " ";
+	}
+
+	cout << endl << endl;
 
 	return 0;
 }
