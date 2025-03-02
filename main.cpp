@@ -274,47 +274,12 @@ double  deletionTime(Set& tree, int attempts) {
 
 }
 
-int main() {
-	Set tree1(10);
 
-	cout << "1: " << (tree1.insert(1) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "100: " << (tree1.insert(100) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "52: " << (tree1.insert(52) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "51: " << (tree1.insert(51) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "9: " << (tree1.insert(9) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "17: " << (tree1.insert(17) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "36: " << (tree1.insert(36) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
-	cout << "11: " << (tree1.insert(11) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl << endl;
-
-	cout << "Tree after insertion: ";
-	tree1.print();
-	cout << endl << endl;
-
-	cout << "1: " << (tree1.erase(1) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
-	cout << "9: " << (tree1.erase(9) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
-	cout << "36: " << (tree1.erase(36) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
-	cout << "100: " << (tree1.erase(100) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl << endl;
-
-	cout << "Tree after deletion: ";
-	tree1.print();
-	cout << endl;
-	cout << endl;
-
-	Set tree2(tree1);
-
-	cout << "Copy tree1 (Copy constructor): ";
-	tree2.print();
-	cout << endl;
-
-	Set tree3 = tree1;
-	cout << "Copy tree1 (Assignment operator): ";
-	tree3.print();
-	cout << endl << endl << endl;
-
+void getAvgTime() {
 
 	cout << "------------------------------------------------------------------------------" << endl << endl;
 	cout << "/////////////////////////////" << "Getting average time" << "/////////////////////////////" << endl;
-	
+
 	const size_t insertionAttempts = 100;
 	const size_t searchAttempts = 1000;
 	const size_t deletionAttempts = 1000;
@@ -363,8 +328,47 @@ int main() {
 		cout << "Avg insertion time: " << avgInsertionTime << " milliseconds" << endl;
 		cout << "Avg search time: " << avgSearchTime << " milliseconds" << endl;
 		cout << "Avg deletion time: " << avgDeletionTime << " milliseconds" << endl;
-
 	}
+}
+
+int main() {
+	Set tree1(10);
+
+	cout << "1: " << (tree1.insert(1) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "100: " << (tree1.insert(100) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "52: " << (tree1.insert(52) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "51: " << (tree1.insert(51) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "9: " << (tree1.insert(9) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "17: " << (tree1.insert(17) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "36: " << (tree1.insert(36) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl;
+	cout << "11: " << (tree1.insert(11) ? "Insertion SUCCESSFUL" : "Key already EXISTS") << endl << endl;
+
+	cout << "Tree after insertion: ";
+	tree1.print();
+	cout << endl << endl;
+
+	cout << "1: " << (tree1.erase(1) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "9: " << (tree1.erase(9) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "36: " << (tree1.erase(36) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl;
+	cout << "100: " << (tree1.erase(100) ? "Deletion SUCCESSFUL" : "Key NOT FOUND") << endl << endl;
+
+	cout << "Tree after deletion: ";
+	tree1.print();
+	cout << endl;
+	cout << endl;
+
+	Set tree2(tree1);
+
+	cout << "Copy tree1 (Copy constructor): ";
+	tree2.print();
+	cout << endl;
+
+	Set tree3 = tree1;
+	cout << "Copy tree1 (Assignment operator): ";
+	tree3.print();
+	cout << endl << endl << endl;
+	
+	getAvgTime();
 
 	return 0;
 }
