@@ -232,17 +232,17 @@ double insertionTime(Set& tree, int elementsCount) {
 
 	auto end = chrono::high_resolution_clock::now();
 
-	chrono::duration<double> diff = end - start;
+	chrono::duration<double, milli> diff = end - start;
 
 	return diff.count();
 
 }
 
-double searchTime(Set& tree, int elementsCount) {
+double searchTime(Set& tree, int attempts) {
 
 	auto start = chrono::high_resolution_clock::now();
 
-	for (size_t i = 0; i < elementsCount; ++i) {
+	for (size_t i = 0; i < attempts; ++i) {
 
 		tree.contains(lcg());
 
@@ -250,17 +250,17 @@ double searchTime(Set& tree, int elementsCount) {
 
 	auto end = chrono::high_resolution_clock::now();
 
-	chrono::duration<double> diff = end - start;
+	chrono::duration<double, milli> diff = end - start;
 
 	return diff.count();
 
 }
 
-double  deletionTime(Set& tree, int elementsCount) {
+double  deletionTime(Set& tree, int attempts) {
 
 	auto start = chrono::high_resolution_clock::now();
 
-	for (size_t i = 0; i < elementsCount; ++i) {
+	for (size_t i = 0; i < attempts; ++i) {
 
 		tree.erase(lcg());
 
@@ -268,7 +268,7 @@ double  deletionTime(Set& tree, int elementsCount) {
 
 	auto end = chrono::high_resolution_clock::now();
 
-	chrono::duration<double> diff = end - start;
+	chrono::duration<double, milli> diff = end - start;
 
 	return diff.count();
 
@@ -309,6 +309,62 @@ int main() {
 	Set tree3 = tree1;
 	cout << "Copy tree1 (Assignment operator): ";
 	tree3.print();
-	cout << endl;
+	cout << endl << endl << endl;
 
+
+	cout << "------------------------------------------------------------------------------" << endl << endl;
+	cout << "/////////////////////////////" << "Getting average time" << "/////////////////////////////" << endl;
+	
+	const size_t insertionAttempts = 100;
+	const size_t searchAttempts = 1000;
+	const size_t deletionAttempts = 1000;
+
+	vector<size_t> sizes = { 1000, 10000, 100000 };
+
+	for (size_t size : sizes) {
+
+		double totalInsertionTime = 0.0;
+		double totalSearchTime = 0.0;
+		double totalDeletionTime = 0.0;
+
+		for (size_t i = 0; i < insertionAttempts; ++i) {
+
+			Set tree;
+			totalInsertionTime += insertionTime(tree, size);
+
+		}
+
+		Set tree;
+
+		for (size_t i = 0; i < size; ++i) {
+
+			tree.insert(lcg());
+
+		}
+
+		for (size_t i = 0; i < deletionAttempts; ++i) {
+
+			totalSearchTime += searchTime(tree, 1);
+
+		}
+
+		for (size_t i = 0; i < searchAttempts; ++i) {
+
+			totalDeletionTime += deletionTime(tree, 1);
+
+		}
+
+		double avgInsertionTime = totalInsertionTime / insertionAttempts;
+		double avgSearchTime = totalSearchTime / searchAttempts;
+		double avgDeletionTime = totalDeletionTime / deletionAttempts;
+
+		cout << endl << endl << "Size: " << size << endl << endl;
+
+		cout << "Avg insertion time: " << avgInsertionTime << " milliseconds" << endl;
+		cout << "Avg search time: " << avgSearchTime << " milliseconds" << endl;
+		cout << "Avg deletion time: " << avgDeletionTime << " milliseconds" << endl;
+
+	}
+
+	return 0;
 }
