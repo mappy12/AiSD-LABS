@@ -19,4 +19,8 @@ class HashTable {
 	HashTable(size_t capacity) : capacity(capacity) {
 		elements = new Item[capacity];
 	}
+
+	~HashTable() {
+		delete[] elements;
+	}
 }; 
