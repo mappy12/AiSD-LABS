@@ -1,3 +1,5 @@
+#include <cmath>
+
 constexpr size_t TABLE_SIZE = 32;
 
 
@@ -9,18 +11,37 @@ class HashTable {
 		T value;
 
 		Item() : key(), value() {}
-		Item(const key, const value) : key(key), value(value) {}
+		Item(const K key, const T value) : key(key), value(value) {}
 	};
 
 	Item* elements;
 	size_t capacity = TABLE_SIZE;
 	size_t count = 0;
 
+public:
+
 	HashTable(size_t capacity) : capacity(capacity) {
+
 		elements = new Item[capacity];
+
 	}
 
 	~HashTable() {
+
 		delete[] elements;
+
 	}
+
+	int hash(long long key, size_t tableSize) {
+
+		double A = (sqrt(5) - 1) / 2;
+
+		double x = key * A;
+
+		double fract_part = x - static_cast<int>(x);
+
+		return static_cast<int>(tableSize * fract_part);
+
+	}
+
 }; 
