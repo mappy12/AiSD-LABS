@@ -19,8 +19,10 @@ int main() {
 
 	cout << hTable.contains(val) << endl;
 
-	cout << hTable.search(932);
+	cout << hTable.search(932) << endl;
 
+	cout << hTable.erase(632) << endl;
+	hTable.print();
 
 	cout << endl;
 

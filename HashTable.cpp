@@ -195,4 +195,30 @@ public:
 
 	}
 
+
+	bool erase(K key) {
+
+		size_t index = multiplicativeHash(key);
+		size_t i = 0;
+
+		while (!elements[index].isEmpty && i < capacity) {
+
+			if (elements[index].key == key) {
+
+				elements[index].isEmpty = true;
+				--count;
+				return true;
+
+			}
+
+			++i;
+
+			index = probe(index, i);
+
+		}
+
+		return false;
+
+	}
+
 };
