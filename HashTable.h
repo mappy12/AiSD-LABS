@@ -40,8 +40,9 @@ public:
     bool erase(K key);
     void insertOrAssign(K key, T &value);
     int countHashMatches(K key);
-    int pearsonHash(std::string& str);
+    int pearsonHash(const std::string& str);
     void print();
+    bool compareHashes(std::string& str1, std::string& str2);
 
     HashTable& operator=(const HashTable& other);
 };

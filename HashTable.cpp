@@ -28,7 +28,18 @@ void HashTable<K, T>::resize() {
 	for (size_t i = 0; i < capacity; ++i) {
 		if (!elements[i].isEmpty) {
 
-			size_t newIdx = multiplicativeHash(elements[i].key);
+			size_t newIdx;
+
+			if constexpr (is_same<K, string>::value) {
+
+				newIdx = pearsonHash(elements[i].key) % (capacity * 2);
+				
+			} else {
+
+				newIdx = multiplicativeHash(elements[i].key);
+
+			}
+
 			size_t j = 0;
 
 			while (!newElements[newIdx].isEmpty && j < capacity * 2) {
@@ -88,20 +99,6 @@ HashTable<K,T>::~HashTable() {
 template<typename K, typename T>
 size_t HashTable<K,T>::multiplicativeHash(T key) {
 
-	if constexpr (is_same<K, string>::value) {
-
-		int intKey = static_cast<int>(pearsonHash(key));
-
-		size_t a = 2654435769u;
-	
-		double x = (static_cast<double>(a) / 32) * intKey;
-		double fractPart = x - floor(x);
-	
-		return static_cast<int>(fractPart * capacity);
-
-
-	}
-
 	size_t a = 2654435769u;
 	
 	double x = (static_cast<double>(a) / 32) * key;
@@ -117,6 +114,30 @@ bool HashTable<K,T>::insert(K key, const T &value) {
 
 	if (count >= capacity - 20) {
 		resize();
+	}
+
+	if constexpr (is_same<K, string>::value) {
+
+		size_t index = pearsonHash(key) % capacity;
+
+		size_t i = 0;
+
+		while (!elements[index].isEmpty && i < capacity) {
+			
+			if (elements[index].key == key) return false;
+
+			++i;
+
+			index = probe(index, i);  
+
+		}
+
+		elements[index] = Item(key, value);
+
+		++count;
+
+		return true;
+
 	}
 
 	size_t index = multiplicativeHash(key);
@@ -276,7 +297,7 @@ int HashTable<K,T>::countHashMatches(K key) {
 
 
 template<typename K, typename T>
-int HashTable<K,T>::pearsonHash(string& str) {
+int HashTable<K,T>::pearsonHash(const string& str) {
 	unsigned char hash = 0;
 
 	for (char c : str) {
@@ -286,6 +307,11 @@ int HashTable<K,T>::pearsonHash(string& str) {
 	}
 
 	return static_cast<int>(hash);
+}
+
+template<typename K, typename T>
+bool HashTable<K, T>::compareHashes(std::string& str1, std::string& str2) {
+    return pearsonHash(str1) == pearsonHash(str2);
 }
 
 
@@ -314,3 +340,4 @@ HashTable<K,T>& HashTable<K,T>::operator=(const HashTable& other) {
 
 
 template class HashTable<int, int>;
+template class HashTable<string,int>;

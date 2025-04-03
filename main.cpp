@@ -43,9 +43,20 @@ int main() {
 
 	hTable2.print();
 
-	string str1 = "h";
+	string str1 = "How are you?";
 
-	cout << hTable.pearsonHash(str1);
+	cout << hTable.pearsonHash(str1) << endl << endl; 
+
+	string str2 = "Hello";
+	string str3 = "Goodbye";
+
+	cout << hTable.compareHashes(str2, str3);
+
+	HashTable<string, int> hTable4(64);
+
+	hTable4.insert("hello", 10);
+
+	hTable4.print();
 
 	cout << endl;
 }
