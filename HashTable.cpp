@@ -1,8 +1,10 @@
+#include <iostream>
 #include <cmath>
 #include <string>
 
 constexpr size_t TABLE_SIZE = 64;
 
+using namespace std;
 
 template<typename K, typename T>
 class HashTable {
@@ -10,10 +12,10 @@ class HashTable {
 	struct Item {
 		K key;
 		T value;
-		bool isEmpty;
+		bool isEmpty = true;
 
 		Item() : key(), value() {}
-		Item(const K key, const T value) : key(key), value(value) {}
+		Item(const K key, const T value) : key(key), value(value), isEmpty(false) {}
 	};
 
 
@@ -40,7 +42,7 @@ class HashTable {
 
 	void resize() {
 
-		Item newElements = new Item[capacity * 2]();
+		Item* newElements = new Item[capacity * 2]();
 
 		for (size_t i = 0; i < capacity; ++i) {
 			if (!elements[i].isEmpty) {
@@ -49,7 +51,8 @@ class HashTable {
 				size_t j = 0;
 
 				while (!newElements[newIdx].isEmpty && j < capacity * 2) {
-					newIdx = probe(newIdx, ++j);
+					++j;
+					newIdx = probe(newIdx, j);
 				}
 
 				newElements[newIdx] = elements[i];
@@ -70,7 +73,7 @@ class HashTable {
         return (index + i) % capacity;
     }
 
-	
+
 public:
 
 	HashTable(size_t capacity) : capacity(capacity) {
@@ -106,7 +109,7 @@ public:
 		double x = (static_cast<double>(a) / 32) * key;
 		double fractPart = x - floor(x);
 
-		return fractPart * capacity;
+		return static_cast<int>(fractPart * capacity);
 
 	}
 
@@ -120,19 +123,36 @@ public:
 		size_t index = multiplicativeHash(key);
 		size_t i = 0;
 
-		while (!elements[i].isEmpty && i < capacity) {
+		while (!elements[index].isEmpty && i < capacity) {
 			
 			if (elements[index].key == key) return false;
 
-			index = probe(index, ++i);  
+			++i;
+
+			index = probe(index, i);  
 
 		}
 
-		elements[i] = Item(key, value);
+		elements[index] = Item(key, value);
 
 		++count;
 
 		return true;
+
+	}
+
+
+	void print() {
+		
+		for(size_t i = 0; i < capacity; ++i) {
+
+			if (!elements[i].isEmpty) {
+
+				cout << "[" << i << "]: Key = " << elements[i].key << ", Value = " << elements[i].value << endl;
+
+			}
+
+		}
 
 	}
 
