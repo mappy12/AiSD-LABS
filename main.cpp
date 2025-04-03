@@ -30,7 +30,20 @@ int main() {
 
 	hTable.print();
 
-	cout << hTable.countHashMatches(932);
+	cout << hTable.countHashMatches(932) << endl;
+
+	HashTable<int, int> hTable2(64);
+	hTable2.insert(40, 90);
+	hTable2.insert(921, 481);
+	hTable2.insert(183, 8);
+
+	cout << endl << "hTable2: " << endl;
+	hTable2.print();
+
+	cout << "hTable2 after hTable2 = hTable: " << endl;
+	hTable2 = hTable;
+
+	hTable2.print();
 
 	cout << endl;
 }

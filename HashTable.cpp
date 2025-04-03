@@ -269,5 +269,26 @@ public:
 	}
 
 
+	HashTable& operator=(const HashTable& other) {
+
+		if(this != &other) {
+
+			delete[] elements;
+
+			capacity = other.capacity;
+			count = other.count;
+
+			elements = new Item[capacity]();
+
+			for (size_t i = 0; i < capacity; ++i) {
+
+				elements[i] = other.elements[i];
+
+			}
+
+		}
+
+		return *this;
+	}
 
 };
