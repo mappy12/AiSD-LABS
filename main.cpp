@@ -15,15 +15,22 @@ int main() {
 
 	cout << endl;
 
-	int val = 76;
+	int val1 = 76;
 
-	cout << hTable.contains(val) << endl;
+	cout << hTable.contains(val1) << endl;
 
 	cout << hTable.search(932) << endl;
 
 	cout << hTable.erase(632) << endl;
 	hTable.print();
 
-	cout << endl;
+	int val2 = 20;
 
+	hTable.insertOrAssign(932, val2);
+
+	hTable.print();
+
+	cout << hTable.countHashMatches(932);
+
+	cout << endl;
 }

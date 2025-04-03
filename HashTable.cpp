@@ -154,6 +154,8 @@ public:
 
 		}
 
+		cout << endl;
+
 	}
 
 
@@ -220,5 +222,52 @@ public:
 		return false;
 
 	}
+
+
+	void insertOrAssign(K key, T &value) {
+
+		size_t index = multiplicativeHash(key);
+		size_t i = 0;
+
+		while(!elements[index].isEmpty && i < capacity) {
+
+			if (elements[index].key == key) {
+
+				elements[index].value = value;
+				return;
+
+			}
+
+			++i;
+
+			index = probe(index, i);
+
+		}
+
+		elements[index] = Item(key, value);
+		++count;
+
+	}
+
+	int countHashMatches(K key) {
+
+		size_t hashVal = multiplicativeHash(key);
+		size_t countElm = 0;
+
+		for (size_t i = 0; i < capacity; ++i) {
+
+			if(!elements[i].isEmpty && multiplicativeHash(elements[i].key) == hashVal) {
+				
+				++countElm;
+
+			}
+
+		}
+
+		return countElm;
+
+	}
+
+
 
 };
