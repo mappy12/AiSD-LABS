@@ -116,7 +116,7 @@ public:
 
 	bool insert(K key, const T &value) {
 
-		if (count >= capacity - 5) {
+		if (count >= capacity - 20) {
 			resize();
 		}
 
@@ -170,6 +170,28 @@ public:
 		}
 
 		return false;
+
+	}
+
+
+	T* search(K key) {
+
+		size_t index = multiplicativeHash(key);
+		size_t i = 0;
+
+		while (!elements[index].isEmpty && i < capacity) {
+
+			if (elements[index].key == key) {
+				return &elements[i].value;
+			}
+
+			++i;
+
+			index = probe(index, i);
+
+		}
+
+		return nullptr;
 
 	}
 

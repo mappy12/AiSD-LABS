@@ -17,7 +17,10 @@ int main() {
 
 	int val = 76;
 
-	cout << hTable.contains(val);
+	cout << hTable.contains(val) << endl;
+
+	cout << hTable.search(932);
+
 
 	cout << endl;
 
