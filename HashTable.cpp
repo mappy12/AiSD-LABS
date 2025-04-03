@@ -156,4 +156,21 @@ public:
 
 	}
 
+
+	bool contains(T &value) {
+
+		for (size_t i = 0; i < capacity; ++i) {
+
+			if (!elements[i].isEmpty && elements[i].value == value) {
+
+				return true;
+
+			}
+
+		}
+
+		return false;
+
+	}
+
 };

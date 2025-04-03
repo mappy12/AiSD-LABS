@@ -13,4 +13,12 @@ int main() {
 
 	hTable.print();
 
+	cout << endl;
+
+	int val = 76;
+
+	cout << hTable.contains(val);
+
+	cout << endl;
+
 }
