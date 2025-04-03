@@ -10,6 +10,7 @@ class HashTable {
 	struct Item {
 		K key;
 		T value;
+		bool isEmpty;
 
 		Item() : key(), value() {}
 		Item(const K key, const T value) : key(key), value(value) {}
@@ -37,6 +38,39 @@ class HashTable {
 	}
 
 
+	void resize() {
+
+		Item newElements = new Item[capacity * 2]();
+
+		for (size_t i = 0; i < capacity; ++i) {
+			if (!elements[i].isEmpty) {
+
+				size_t newIdx = multiplicativeHash(elements[i].key);
+				size_t j = 0;
+
+				while (!newElements[newIdx].isEmpty && j < capacity * 2) {
+					newIdx = probe(newIdx, ++j);
+				}
+
+				newElements[newIdx] = elements[i];
+
+			}
+		}
+
+		delete[] elements;
+
+		elements = newElements;
+
+		capacity = capacity * 2;
+
+	}
+
+
+	size_t probe(size_t index, size_t i) const {
+        return (index + i) % capacity;
+    }
+
+	
 public:
 
 	HashTable(size_t capacity) : capacity(capacity) {
@@ -77,5 +111,29 @@ public:
 	}
 
 
+	bool insert(K key, const T &value) {
+
+		if (count >= capacity - 5) {
+			resize();
+		}
+
+		size_t index = multiplicativeHash(key);
+		size_t i = 0;
+
+		while (!elements[i].isEmpty && i < capacity) {
+			
+			if (elements[index].key == key) return false;
+
+			index = probe(index, ++i);  
+
+		}
+
+		elements[i] = Item(key, value);
+
+		++count;
+
+		return true;
+
+	}
 
 };
