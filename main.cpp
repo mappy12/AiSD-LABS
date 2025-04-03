@@ -1,4 +1,4 @@
-#include "HashTable.cpp"
+#include "HashTable.h"
 
 
 int main() {
@@ -43,7 +43,7 @@ int main() {
 
 	hTable2.print();
 
-	string str1 = "Hello";
+	string str1 = "h";
 
 	cout << hTable.pearsonHash(str1);
 

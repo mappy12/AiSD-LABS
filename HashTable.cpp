@@ -1,8 +1,4 @@
-#include <iostream>
-#include <cmath>
-#include <string>
-
-constexpr size_t TABLE_SIZE = 64;
+#include "HashTable.h"
 
 unsigned char pearsonTable[256] = {
     98,  6,  85, 150, 36,  23, 83,  39, 240, 204, 234, 200, 22,  4,   132, 248,
@@ -23,304 +19,298 @@ unsigned char pearsonTable[256] = {
     139, 85,  2,   200, 132, 26,  53,  128, 97,  126, 47,  63,  234, 19,  192, 3
 };
 
-using namespace std;
 
 template<typename K, typename T>
-class HashTable {
+void HashTable<K, T>::resize() {
 
-	struct Item {
-		K key;
-		T value;
-		bool isEmpty = true;
+	Item* newElements = new Item[capacity * 2]();
 
-		Item() : key(), value() {}
-		Item(const K key, const T value) : key(key), value(value), isEmpty(false) {}
-	};
+	for (size_t i = 0; i < capacity; ++i) {
+		if (!elements[i].isEmpty) {
 
+			size_t newIdx = multiplicativeHash(elements[i].key);
+			size_t j = 0;
 
-	Item* elements;
-	size_t capacity = TABLE_SIZE;
-	size_t count = 0;
+			while (!newElements[newIdx].isEmpty && j < capacity * 2) {
+				++j;
+				newIdx = probe(newIdx, j);
+			}
 
-
-	size_t stringToInt(const std::string key) {
-
-		size_t hash = 0;
-
-		const size_t mod = 1e9 + 7;
-
-		for (char c : key) {
-
-			hash = (hash * 31 + c) % mod;
+			newElements[newIdx] = elements[i];
 
 		}
-
-		return hash;
 	}
 
+	delete[] elements;
 
-	void resize() {
+	elements = newElements;
 
-		Item* newElements = new Item[capacity * 2]();
+	capacity = capacity * 2;
 
-		for (size_t i = 0; i < capacity; ++i) {
-			if (!elements[i].isEmpty) {
+}
 
-				size_t newIdx = multiplicativeHash(elements[i].key);
-				size_t j = 0;
 
-				while (!newElements[newIdx].isEmpty && j < capacity * 2) {
-					++j;
-					newIdx = probe(newIdx, j);
-				}
+template<typename K, typename T>
+size_t HashTable<K,T>::probe(size_t index, size_t i) const {
+	return (index + i) % capacity;
+}
 
-				newElements[newIdx] = elements[i];
 
-			}
+template<typename K, typename T>
+HashTable<K,T>::HashTable(size_t capacity) : capacity(capacity) {
+
+	elements = new Item[capacity]();
+
+}
+
+
+template<typename K, typename T>
+HashTable<K,T>::HashTable(const HashTable& other) :
+	capacity(other.capacity),
+	count(other.count),
+	elements(new Item[other.capacity]) {
+
+	for (size_t i = 0; i < other.capacity; ++i) {
+		elements[i] = other.elements[i];
+	}
+
+}
+
+
+template<typename K, typename T>
+HashTable<K,T>::~HashTable() {
+
+	delete[] elements;
+
+}
+
+
+template<typename K, typename T>
+size_t HashTable<K,T>::multiplicativeHash(T key) {
+
+	if constexpr (is_same<K, string>::value) {
+
+		int intKey = static_cast<int>(pearsonHash(key));
+
+		size_t a = 2654435769u;
+	
+		double x = (static_cast<double>(a) / 32) * intKey;
+		double fractPart = x - floor(x);
+	
+		return static_cast<int>(fractPart * capacity);
+
+
+	}
+
+	size_t a = 2654435769u;
+	
+	double x = (static_cast<double>(a) / 32) * key;
+	double fractPart = x - floor(x);
+
+	return static_cast<int>(fractPart * capacity);
+
+}
+
+
+template<typename K, typename T>
+bool HashTable<K,T>::insert(K key, const T &value) {
+
+	if (count >= capacity - 20) {
+		resize();
+	}
+
+	size_t index = multiplicativeHash(key);
+	size_t i = 0;
+
+	while (!elements[index].isEmpty && i < capacity) {
+		
+		if (elements[index].key == key) return false;
+
+		++i;
+
+		index = probe(index, i);  
+
+	}
+
+	elements[index] = Item(key, value);
+
+	++count;
+
+	return true;
+
+}
+
+
+template<typename K, typename T>
+void HashTable<K,T>::print() {
+	
+	for(size_t i = 0; i < capacity; ++i) {
+
+		if (!elements[i].isEmpty) {
+
+			cout << "[" << i << "]: Key = " << elements[i].key << ", Value = " << elements[i].value << endl;
+
 		}
+
+	}
+
+	cout << endl;
+
+}
+
+
+template<typename K, typename T>
+bool HashTable<K,T>::contains(T &value) {
+
+	for (size_t i = 0; i < capacity; ++i) {
+
+		if (!elements[i].isEmpty && elements[i].value == value) {
+
+			return true;
+
+		}
+
+	}
+
+	return false;
+
+}
+
+
+template<typename K, typename T>
+T* HashTable<K,T>::search(K key) {
+
+	size_t index = multiplicativeHash(key);
+	size_t i = 0;
+
+	while (!elements[index].isEmpty && i < capacity) {
+
+		if (elements[index].key == key) {
+			return &elements[i].value;
+		}
+
+		++i;
+
+		index = probe(index, i);
+
+	}
+
+	return nullptr;
+
+}
+
+
+template<typename K, typename T>
+bool HashTable<K,T>::erase(K key) {
+
+	size_t index = multiplicativeHash(key);
+	size_t i = 0;
+
+	while (!elements[index].isEmpty && i < capacity) {
+
+		if (elements[index].key == key) {
+
+			elements[index].isEmpty = true;
+			--count;
+			return true;
+
+		}
+
+		++i;
+
+		index = probe(index, i);
+
+	}
+
+	return false;
+
+}
+
+
+template<typename K, typename T>
+void HashTable<K,T>::insertOrAssign(K key, T &value) {
+
+	size_t index = multiplicativeHash(key);
+	size_t i = 0;
+
+	while(!elements[index].isEmpty && i < capacity) {
+
+		if (elements[index].key == key) {
+
+			elements[index].value = value;
+			return;
+
+		}
+
+		++i;
+
+		index = probe(index, i);
+
+	}
+
+	elements[index] = Item(key, value);
+	++count;
+
+}
+
+
+template<typename K, typename T>
+int HashTable<K,T>::countHashMatches(K key) {
+
+	size_t hashVal = multiplicativeHash(key);
+	size_t countElm = 0;
+
+	for (size_t i = 0; i < capacity; ++i) {
+
+		if(!elements[i].isEmpty && multiplicativeHash(elements[i].key) == hashVal) {
+			
+			++countElm;
+
+		}
+
+	}
+
+	return countElm;
+
+}
+
+
+template<typename K, typename T>
+int HashTable<K,T>::pearsonHash(string& str) {
+	unsigned char hash = 0;
+
+	for (char c : str) {
+
+		hash = pearsonTable[hash ^ static_cast<unsigned char>(c)];
+		
+	}
+
+	return static_cast<int>(hash);
+}
+
+
+template<typename K, typename T>
+HashTable<K,T>& HashTable<K,T>::operator=(const HashTable& other) {
+
+	if(this != &other) {
 
 		delete[] elements;
 
-		elements = newElements;
-
-		capacity = capacity * 2;
-
-	}
-
-
-	size_t probe(size_t index, size_t i) const {
-        return (index + i) % capacity;
-    }
-
-
-public:
-
-	HashTable(size_t capacity) : capacity(capacity) {
+		capacity = other.capacity;
+		count = other.count;
 
 		elements = new Item[capacity]();
 
-	}
+		for (size_t i = 0; i < capacity; ++i) {
 
-
-	HashTable(const HashTable& other) :
-		capacity(other.capacity),
-		count(other.count),
-		elements(new Item[other.capacity]) {
-
-		for (size_t i = 0; i < other.capacity; ++i) {
 			elements[i] = other.elements[i];
-		}
-
-	}
-
-
-	~HashTable() {
-
-		delete[] elements;
-
-	}
-
-
-	size_t multiplicativeHash(T key) {
-
-		size_t a = 2654435769u;
-		
-		double x = (static_cast<double>(a) / 32) * key;
-		double fractPart = x - floor(x);
-
-		return static_cast<int>(fractPart * capacity);
-
-	}
-
-
-	bool insert(K key, const T &value) {
-
-		if (count >= capacity - 20) {
-			resize();
-		}
-
-		size_t index = multiplicativeHash(key);
-		size_t i = 0;
-
-		while (!elements[index].isEmpty && i < capacity) {
-			
-			if (elements[index].key == key) return false;
-
-			++i;
-
-			index = probe(index, i);  
 
 		}
 
-		elements[index] = Item(key, value);
-
-		++count;
-
-		return true;
-
 	}
 
+	return *this;
+}
 
-	void print() {
-		
-		for(size_t i = 0; i < capacity; ++i) {
 
-			if (!elements[i].isEmpty) {
-
-				cout << "[" << i << "]: Key = " << elements[i].key << ", Value = " << elements[i].value << endl;
-
-			}
-
-		}
-
-		cout << endl;
-
-	}
-
-
-	bool contains(T &value) {
-
-		for (size_t i = 0; i < capacity; ++i) {
-
-			if (!elements[i].isEmpty && elements[i].value == value) {
-
-				return true;
-
-			}
-
-		}
-
-		return false;
-
-	}
-
-
-	T* search(K key) {
-
-		size_t index = multiplicativeHash(key);
-		size_t i = 0;
-
-		while (!elements[index].isEmpty && i < capacity) {
-
-			if (elements[index].key == key) {
-				return &elements[i].value;
-			}
-
-			++i;
-
-			index = probe(index, i);
-
-		}
-
-		return nullptr;
-
-	}
-
-
-	bool erase(K key) {
-
-		size_t index = multiplicativeHash(key);
-		size_t i = 0;
-
-		while (!elements[index].isEmpty && i < capacity) {
-
-			if (elements[index].key == key) {
-
-				elements[index].isEmpty = true;
-				--count;
-				return true;
-
-			}
-
-			++i;
-
-			index = probe(index, i);
-
-		}
-
-		return false;
-
-	}
-
-
-	void insertOrAssign(K key, T &value) {
-
-		size_t index = multiplicativeHash(key);
-		size_t i = 0;
-
-		while(!elements[index].isEmpty && i < capacity) {
-
-			if (elements[index].key == key) {
-
-				elements[index].value = value;
-				return;
-
-			}
-
-			++i;
-
-			index = probe(index, i);
-
-		}
-
-		elements[index] = Item(key, value);
-		++count;
-
-	}
-
-	int countHashMatches(K key) {
-
-		size_t hashVal = multiplicativeHash(key);
-		size_t countElm = 0;
-
-		for (size_t i = 0; i < capacity; ++i) {
-
-			if(!elements[i].isEmpty && multiplicativeHash(elements[i].key) == hashVal) {
-				
-				++countElm;
-
-			}
-
-		}
-
-		return countElm;
-
-	}
-
-
-	unsigned char pearsonHash(string& str) {
-		unsigned char hash = 0;
-
-		for (char c : str) {
-
-			hash = pearsonTable[hash ^ static_cast<unsigned char>(c)];
-			
-		}
-
-		return hash;
-	}
-
-
-	HashTable& operator=(const HashTable& other) {
-
-		if(this != &other) {
-
-			delete[] elements;
-
-			capacity = other.capacity;
-			count = other.count;
-
-			elements = new Item[capacity]();
-
-			for (size_t i = 0; i < capacity; ++i) {
-
-				elements[i] = other.elements[i];
-
-			}
-
-		}
-
-		return *this;
-	}
-
-};
+template class HashTable<int, int>;
