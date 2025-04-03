@@ -33,14 +33,16 @@ public:
     HashTable(const HashTable& other);
     ~HashTable();
 
-    size_t multiplicativeHash(T key);
+    size_t hash(K key);
+
+    size_t multiplicativeHash(int key);
     bool insert(K key, const T &value);
     bool contains(T &value);
     T* search(K key);
     bool erase(K key);
     void insertOrAssign(K key, T &value);
     int countHashMatches(K key);
-    int pearsonHash(const std::string& str);
+    size_t pearsonHash(const std::string& str);
     void print();
     bool compareHashes(std::string& str1, std::string& str2);
 

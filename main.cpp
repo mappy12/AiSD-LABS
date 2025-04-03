@@ -50,7 +50,7 @@ int main() {
 	string str2 = "Hello";
 	string str3 = "Goodbye";
 
-	cout << hTable.compareHashes(str2, str3);
+	cout << hTable.compareHashes(str2, str3) << endl << endl;
 
 	HashTable<string, int> hTable4(64);
 

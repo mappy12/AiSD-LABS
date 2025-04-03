@@ -96,8 +96,23 @@ HashTable<K,T>::~HashTable() {
 }
 
 
+template<>
+size_t HashTable<int, int>::hash(int key) {
+
+    return multiplicativeHash(key); 
+	
+}
+
+
+template<>
+size_t HashTable<std::string, int>::hash(std::string key) {
+
+    return pearsonHash(key);  
+
+}
+
 template<typename K, typename T>
-size_t HashTable<K,T>::multiplicativeHash(T key) {
+size_t HashTable<K,T>::multiplicativeHash(int key) {
 
 	size_t a = 2654435769u;
 	
@@ -116,31 +131,7 @@ bool HashTable<K,T>::insert(K key, const T &value) {
 		resize();
 	}
 
-	if constexpr (is_same<K, string>::value) {
-
-		size_t index = pearsonHash(key) % capacity;
-
-		size_t i = 0;
-
-		while (!elements[index].isEmpty && i < capacity) {
-			
-			if (elements[index].key == key) return false;
-
-			++i;
-
-			index = probe(index, i);  
-
-		}
-
-		elements[index] = Item(key, value);
-
-		++count;
-
-		return true;
-
-	}
-
-	size_t index = multiplicativeHash(key);
+	size_t index = hash(key);
 	size_t i = 0;
 
 	while (!elements[index].isEmpty && i < capacity) {
@@ -201,7 +192,7 @@ bool HashTable<K,T>::contains(T &value) {
 template<typename K, typename T>
 T* HashTable<K,T>::search(K key) {
 
-	size_t index = multiplicativeHash(key);
+	size_t index = hash(key);
 	size_t i = 0;
 
 	while (!elements[index].isEmpty && i < capacity) {
@@ -224,7 +215,7 @@ T* HashTable<K,T>::search(K key) {
 template<typename K, typename T>
 bool HashTable<K,T>::erase(K key) {
 
-	size_t index = multiplicativeHash(key);
+	size_t index = hash(key);
 	size_t i = 0;
 
 	while (!elements[index].isEmpty && i < capacity) {
@@ -251,7 +242,7 @@ bool HashTable<K,T>::erase(K key) {
 template<typename K, typename T>
 void HashTable<K,T>::insertOrAssign(K key, T &value) {
 
-	size_t index = multiplicativeHash(key);
+	size_t index = hash(key);
 	size_t i = 0;
 
 	while(!elements[index].isEmpty && i < capacity) {
@@ -278,12 +269,12 @@ void HashTable<K,T>::insertOrAssign(K key, T &value) {
 template<typename K, typename T>
 int HashTable<K,T>::countHashMatches(K key) {
 
-	size_t hashVal = multiplicativeHash(key);
+	size_t hashVal = hash(key);
 	size_t countElm = 0;
 
 	for (size_t i = 0; i < capacity; ++i) {
 
-		if(!elements[i].isEmpty && multiplicativeHash(elements[i].key) == hashVal) {
+		if(!elements[i].isEmpty && hash(elements[i].key) == hashVal) {
 			
 			++countElm;
 
@@ -297,7 +288,7 @@ int HashTable<K,T>::countHashMatches(K key) {
 
 
 template<typename K, typename T>
-int HashTable<K,T>::pearsonHash(const string& str) {
+size_t HashTable<K,T>::pearsonHash(const string& str) {
 	unsigned char hash = 0;
 
 	for (char c : str) {
@@ -306,8 +297,9 @@ int HashTable<K,T>::pearsonHash(const string& str) {
 		
 	}
 
-	return static_cast<int>(hash);
+	return static_cast<size_t>(hash);
 }
+
 
 template<typename K, typename T>
 bool HashTable<K, T>::compareHashes(std::string& str1, std::string& str2) {
