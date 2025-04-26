@@ -144,8 +144,41 @@ public:
     }
     
     
-    bool has_edge(const Vertex& from, const Vertex& to) const;
-    bool has_edge (const Edge& e) const;
+    bool has_edge(const Vertex& from, const Vertex& to) const {
+
+        if (!has_vertex(from)) return false;
+
+        auto& edges = adjacency_list[from];
+
+        for (const auto& edge : edges) {
+
+            if (edge->to == to) return true;
+
+        }
+
+        return false;
+
+    }
+
+
+    bool has_edge (const Edge& e) const {
+
+        if (!has_vertex(e.from)) return false;
+
+        auto& edges = adjacency_list[e.from];
+
+        for (const auto& edge : edges) {
+
+            if (edge->to == e.to && edge->distance == e.distance) return true;
+
+        }
+
+        return false;
+
+
+    }
+
+
     std::vector<Edge> edges(const Vertex& vertex);
 
     size_t order() const;
