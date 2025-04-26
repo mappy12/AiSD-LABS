@@ -117,7 +117,33 @@ public:
     }
 
 
-    bool remove_edge(const Edge& e); 
+    bool remove_edge(const Edge& e) {
+
+        if (!has_vertex(e.from) || !has_vertex(e.to)) return false;
+
+        auto& edges = adjacency_list[e.from];
+
+        vector<shared_ptr<Edge>> updated_edges;
+
+        for (const auto& edge : edges) {
+
+            if (!(edge->to == e.to && edge->distance == e.distance)) {
+
+                updated_edges.push_back(edge);
+
+            }
+
+        }
+
+        if(edges.size() == updated.size()) return false;
+
+        edges = updated_edges;
+
+        return true;
+
+    }
+    
+    
     bool has_edge(const Vertex& from, const Vertex& to) const;
     bool has_edge (const Edge& e) const;
     std::vector<Edge> edges(const Vertex& vertex);
