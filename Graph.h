@@ -3,8 +3,6 @@ using namespace std;
 
 template<typename Vertex, typename Distance = double>
 class Graph {
-
-    unordered_map<Vertex, vector<shared_ptr<Edge>>> adjacency_list;
     
 public:
 
@@ -16,9 +14,14 @@ public:
         Edge(const Vertex f, const Vertex t, const Distance d) : from(f), to(t), distance(d) {}
     };
 
+private:
+
+    unordered_map<Vertex, vector<shared_ptr<Edge>>> adjacency_list;
+
+public:
 
     bool has_vertex(const Vertex& v) const {
-        return adjacency_list.contains();
+        return adjacency_list.contains(v);
     }
 
     bool add_vertex(const Vertex& v) {
@@ -29,12 +32,48 @@ public:
     }
 
     bool remove_vertex(const Vertex& v) {
-        if(!has_vertex(v)) return false;
-        
-    }
-    std::vector<Vertex> vertices() const;
+        if (!has_vertex(v)) return false;
 
-    void add_edge(const Vertex& from, const Vertex& to, const Distacnce& d);
+        adjacency_list.erase(v);
+
+        for (auto& vertex_edges : adjacency_list) {
+
+            auto& edges_from_vertex = vertex_edges.second;
+
+            vector<shared_ptr<Edge>> updated_edges;
+
+            for (const auto& edge : edges_from_vertex) {
+
+                if (edge->to != v) {
+
+                    updated_edges.push_back(edge);
+
+                }
+
+            }
+
+            edges_from_vertex = updated_edges;
+
+        }
+
+        return true;
+
+    }
+
+
+    std::vector<Vertex> vertices() const {
+
+        vector<Vertex> vertices;
+
+        for (const auto& pair : adjacency_list) {
+            vertices.push_back(pair.first);
+        }
+
+        return vertices;
+
+    }
+
+    void add_edge(const Vertex& from, const Vertex& to, const Distance& d);
     bool remove_edge(const Vertex& from, const Vertex& to);
     bool remove_edge(const Edge& e); 
     bool has_edge(const Vertex& from, const Vertex& to) const;
