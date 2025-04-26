@@ -179,7 +179,14 @@ public:
     }
 
 
-    std::vector<Edge> edges(const Vertex& vertex);
+    std::vector<Edge> edges(const Vertex& vertex) {
+
+        if (!has_vertex(vertex)) return {};
+
+        return adjacency_list[vertex];
+
+    }
+
 
     size_t order() const;
 
