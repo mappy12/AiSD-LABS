@@ -24,12 +24,14 @@ public:
         return adjacency_list.contains(v);
     }
 
+
     bool add_vertex(const Vertex& v) {
         if (has_vertex(v)) return false;
 
         adjacency_list[v] = {};
         return true;
     }
+
 
     bool remove_vertex(const Vertex& v) {
         if (!has_vertex(v)) return false;
@@ -73,8 +75,48 @@ public:
 
     }
 
-    void add_edge(const Vertex& from, const Vertex& to, const Distance& d);
-    bool remove_edge(const Vertex& from, const Vertex& to);
+
+    void add_edge(const Vertex& from, const Vertex& to, const Distance& d) {
+
+        if (!has_vertex(from)) {
+            add_vertex(from);
+        }
+
+        if (!has_vertex(to)) {
+            add_vertex(to);
+        }
+
+        auto edge = make_shared<Edge>(from, to, d);
+
+        adjacency_list[from].push_back(edge);
+
+    }
+
+
+    bool remove_edge(const Vertex& from, const Vertex& to) {
+
+        if (!has_vertex(from)) return false;
+
+        if (!has_vertex(to)) return false;
+
+        auto& edges = adjacency_list[from];
+
+        vector<shared_ptr<Edge>> updated_edges;
+
+        for (const auto& edge : edges) {
+
+            if (edge->to != to) updated_edges.push_back(edge);
+
+        }
+
+        if (edges.size() == updated_edges.size()) return false;
+
+        edges = updated_edges;
+
+        return true;
+    }
+
+
     bool remove_edge(const Edge& e); 
     bool has_edge(const Vertex& from, const Vertex& to) const;
     bool has_edge (const Edge& e) const;
