@@ -1,3 +1,7 @@
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+
 
 using namespace std;
 
@@ -135,7 +139,7 @@ public:
 
         }
 
-        if(edges.size() == updated.size()) return false;
+        if(edges.size() == updated_edges.size()) return false;
 
         edges = updated_edges;
 
@@ -196,5 +200,40 @@ public:
 
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const;
 
-    std::vector<Vertex> walk(const Vertex& start_vertex) const;
+    std::vector<Vertex> walk(const Vertex& start_vertex) const {
+
+        vector<Vertex> result;
+
+        if (!has_vertex(start_vertex)) return result;
+
+        queue<Vertex> q;
+        unordered_set<Vertex> visited;
+
+        q.push(start_vertex);
+        visited.insert(start_vertex);
+
+        while(!q.empty()) {
+
+            Vertex current = q.front();
+
+            auto& edges = adjacency_list[current];
+
+            for (const auto& edge : edges) {
+
+                Vertex& neighbor = edge->to;
+
+                if (!visited.contains(neighbor)) {
+
+                    q.push(neighbor);
+                    visited.insert(neighbor);
+
+                }
+
+            }
+
+        }
+
+        return result;
+
+    }
 };
