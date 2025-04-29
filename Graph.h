@@ -320,7 +320,27 @@ public:
 
         reverse(path.begin(), path.end());
 
-        return path;
+        Vector<Edge> path_edges;
+
+        for (size_t i = 0; i + 1 < path.size(); ++i) {
+
+            Vertex u = path[i];
+            Vertex v = path[i + 1];
+
+            for (auto& edge : adjacency_list[u]) {
+
+                if (edge->to == v) {
+
+                    path_edges.push_back(*edge);
+                    break;
+
+                }
+
+            }
+
+        }
+
+        return path_edges;
 
     }
 
