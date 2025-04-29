@@ -192,13 +192,53 @@ public:
     }
 
 
-    size_t order() const;
+    size_t order() const {
+        return adjacency_list.size();
+    }
 
-    size_t degree(const Vertex& v) const;
+
+    size_t degree(const Vertex& v) const {
+
+        if (!has_vertex(v)) return 0;
+
+        return adjacency_list[v].size();
+
+    }
     
-    bool is_connected() const;
+    bool is_connected() const {
+
+        if(adjacency_list.empty()) return true;
+
+        Vertex start = adjacency_list.begin()->first;
+
+        vector<Vertex> reached_vertices = walk(start);
+
+        if (reached_vertices.size() != adjacency_list.size()) return false;
+
+        unordered_map<Vertex, vector<shared_ptr<Edge>>> r_adjacency_list;
+
+        for (auto& vertices_edges : adjacency_list) {
+
+            for (auto& edge : vertices_edges.second) {
+
+                r_adjacency_list[edge->to].push_back(
+                    make_shared<Edge>(edge->to, edge->from, edge->distance)
+                );
+
+            }
+
+        }
+
+        vector<Vertex> r_reached_vertices = reverse_walk(start, r_adjacency_list);
+
+        if (r_reached_vertices.size() != adjacency_list.size()) return false;
+
+        return true;
+
+    }
 
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const;
+
 
     std::vector<Vertex> walk(const Vertex& start_vertex) const {
 
@@ -216,11 +256,60 @@ public:
 
             Vertex current = q.front();
 
+            q.pop();
+
+            result.push_back(current);
+
             auto& edges = adjacency_list[current];
 
             for (const auto& edge : edges) {
 
-                Vertex& neighbor = edge->to;
+                Vertex neighbor = edge->to;
+
+                if (!visited.contains(neighbor)) {
+
+                    q.push(neighbor);
+                    visited.insert(neighbor);
+
+                }
+
+            }
+
+        }
+
+        return result;
+
+    }
+
+    
+    std::vector<Vertex> reverse_walk(
+        const Vertex& start_vertex,
+        const unordered_map<Vertex, vector<shared_ptr<Edge>>>& r_adjacency_list
+    ) const {
+
+        vector<Vertex> result;
+
+        if (!r_adjacency_list.contains(start_vertex)) return result;
+
+        queue<Vertex> q;
+        unordered_set<Vertex> visited;
+
+        q.push(start_vertex);
+        visited.insert(start_vertex);
+
+        while(!q.empty()) {
+
+            Vertex current = q.front();
+
+            q.pop();
+            
+            result.push_back(current);
+
+            auto& edges = r_adjacency_list[current];
+
+            for (const auto& edge : edges) {
+
+                Vertex neighbor = edge->to;
 
                 if (!visited.contains(neighbor)) {
 
