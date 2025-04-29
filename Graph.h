@@ -249,6 +249,7 @@ public:
 
     }
 
+
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
 
         unordered_map<Vertex, int> distance;
@@ -320,7 +321,7 @@ public:
 
         reverse(path.begin(), path.end());
 
-        Vector<Edge> path_edges;
+        vector<Edge> path_edges;
 
         for (size_t i = 0; i + 1 < path.size(); ++i) {
 
