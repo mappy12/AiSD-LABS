@@ -155,7 +155,7 @@ public:
 
         if (!has_vertex(from)) return false;
 
-        auto& edges = adjacency_list[from];
+        const auto& edges = adjacency_list.find(from)->second;
 
         for (const auto& edge : edges) {
 
@@ -213,7 +213,7 @@ public:
 
         if (!has_vertex(v)) return 0;
 
-        return adjacency_list[v].size();
+        return adjacency_list.find(v)->second.size();
 
     }
     
@@ -286,7 +286,7 @@ public:
 
             if (current ==  to) break;
 
-            for (auto& edge : adjacency_list[current]) {
+            for (auto& edge : adjacency_list.find(current)->second) {
 
                 Vertex neighbor = edge->to;
 
@@ -309,7 +309,7 @@ public:
 
         vector<Vertex> path;
 
-        if (distance[to] == INT_MAX) return path;
+        if (distance[to] == INT_MAX) return {};
 
         for (Vertex v = to; v != from; v = previous[v]) {
 
@@ -328,7 +328,7 @@ public:
             Vertex u = path[i];
             Vertex v = path[i + 1];
 
-            for (auto& edge : adjacency_list[u]) {
+            for (auto& edge : adjacency_list.find(u)->second) {
 
                 if (edge->to == v) {
 
@@ -342,6 +342,18 @@ public:
         }
 
         return path_edges;
+
+    }
+
+    double get_path_weight(const vector<Edge>& path) {
+
+        double total_w = 0.0;
+
+        for (auto& edge : path) {
+            total_w += edge.distance;
+        }
+
+        return total_w;
 
     }
 
@@ -366,7 +378,7 @@ public:
 
             result.push_back(current);
 
-            auto& edges = adjacency_list[current];
+            auto& edges = adjacency_list.find(current)->second;
 
             for (const auto& edge : edges) {
 
@@ -411,7 +423,7 @@ public:
             
             result.push_back(current);
 
-            auto& edges = r_adjacency_list[current];
+            auto& edges = r_adjacency_list.find(current)->second;
 
             for (const auto& edge : edges) {
 
@@ -423,6 +435,104 @@ public:
                     visited.insert(neighbor);
 
                 }
+
+            }
+
+        }
+
+        return result;
+
+    }
+
+    void print() const {
+
+        for (auto& vertex_edges : adjacency_list) {
+
+            const Vertex v = vertex_edges.first;
+            const auto& edges = vertex_edges.second;
+
+            cout << "Вершина: " << v << "\t" << "Ребра: ";
+
+            if (edges.empty()) {
+
+                cout << "Ребер нет" << endl << endl;
+
+            } else {
+
+                for (auto edge : edges) {
+
+                    cout << endl << "\t\t\t" << edge->from << " -> " << edge->to
+                        << " (вес: " << edge->distance << ")" << endl; 
+    
+                }
+    
+                cout << endl;
+
+            }
+
+        }
+
+    }
+
+    void print_vertices() const {
+
+        vector<Vertex> vertices;
+
+        vertices = this->vertices();
+
+        for (size_t i = 0; i < vertices.size(); ++i) {
+
+            cout << vertices[i] << " ";
+
+        }
+
+        cout << endl << endl;
+
+    }
+
+
+    void print_path(vector<Edge>& path) const {
+
+        if (path.empty()) {
+
+            cout << "Путь пустой";
+            return;
+
+        }
+
+        cout << path.front().from;
+
+        for (auto& edge : path) {
+            cout << " -> " << edge.to;
+        }
+
+    }
+    
+
+    Vertex most_isolated_clinic() {
+
+        Vertex result;
+
+        double max_avg = -1;
+
+        for (auto& vertex_edges : adjacency_list) {
+            
+            if (vertex_edges.second.empty()) continue;
+
+            double sum = 0.0;
+
+            for (auto& edge : vertex_edges.second) {
+
+                sum += edge->distance;
+
+            }
+
+            double avg = sum / vertex_edges.second.size();
+
+            if (avg > max_avg) {
+
+                max_avg = avg;
+                result = vertex_edges.first;
 
             }
 
