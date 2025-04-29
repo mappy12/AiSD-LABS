@@ -237,7 +237,80 @@ public:
 
     }
 
-    std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const;
+    std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
+
+        unordered_map<Vertex, int> distance;
+        unordered_map<Vertex, Vertex> previous;
+        unordered_set<Vertex> visited;
+
+        for (auto& [v, _] : adjacency_list) {
+
+            distance[v] = INT_MAX;
+            
+        }
+
+        if (!has_vertex(from) || !has_vertex(to)) return {};
+        
+        distance[from] = 0;
+
+        vector<Vertex> to_process = { from };
+
+        while (!to_process.empty()) {
+
+            auto min_it = min_element(to_process.begin(), to_process.end(),
+                [&distance](const Vertex& a, const Vertex& b) {
+
+                    return distance[a] < distance[b];
+
+                });
+
+            Vertex current = *min_it;
+
+            to_process.erase(min_it);
+
+            if (visited.contains(current)) continue;
+            visited.insert(current);
+
+            if (current ==  to) break;
+
+            for (auto& edge : adjacency_list[current]) {
+
+                Vertex neighbor = edge->to;
+
+                int w = edge->distance;
+
+                int new_dist = distance[current] + w;
+
+                if (new_dist < distance[neighbor]) {
+
+                    distance[neighbor] = new_dist;
+                    previous[neighbor] = current;
+
+                    to_process.push_back(neighbor);                    
+
+                }
+
+            }
+
+        }
+
+        vector<Vertex> path;
+
+        if (distance[to] == INT_MAX) return path;
+
+        for (Vertex v = to; v != from; v = previous[v]) {
+
+            path.push_back(v);
+
+        }
+
+        path.push_back(from);
+
+        reverse(path.begin(), path.end());
+
+        return path;
+
+    }
 
 
     std::vector<Vertex> walk(const Vertex& start_vertex) const {
