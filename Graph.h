@@ -1,6 +1,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
+#include <algorithm>
+#include <limits>
+#include <memory>
 
 
 using namespace std;
@@ -187,8 +190,17 @@ public:
 
         if (!has_vertex(vertex)) return {};
 
-        return adjacency_list[vertex];
+        const auto& ptrs_edges = adjacency_list[vertex];
 
+        vector<Edge> result;
+
+        for (auto& edge_ptr : ptrs_edges) {
+
+            result.push_back(*edge_ptr);
+
+        }
+
+        return result;
     }
 
 
